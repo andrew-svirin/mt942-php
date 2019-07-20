@@ -1,0 +1,10 @@
+{
+    "name": "andriy-svirin/mt942-php",
+    "type": "package",
+    "description": "PHP library for parse MT942 Swift format.",
+    "version": "dev",
+    "minimum-stability": "dev",
+    "autoload": {
+        "classmap": ["src/"]
+    }
+}
