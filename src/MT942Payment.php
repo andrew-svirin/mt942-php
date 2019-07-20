@@ -1,8 +1,8 @@
 <?php
 
-namespace Ukrinsoft\MT942;
+namespace AndriySvirin\MT942;
 
-use Ukrinsoft\MT942\MT942Statement;
+use AndriySvirin\MT942\MT942Statement;
 
 /**
  * Payment class.

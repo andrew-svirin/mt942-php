@@ -1,6 +1,6 @@
 <?php
 
-namespace Ukrinsoft\MT942;
+namespace AndriySvirin\MT942;
 
 /**
  * MT942 Statement class.
