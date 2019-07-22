@@ -1,23 +1,25 @@
 {
-    "name": "andriy-svirin/mt942-php",
-    "type": "library",
-    "description": "PHP library for parse MT942 Swift format.",
-    "keywords": [
-        "mt942",
-        "swift",
-        "PHP",
-        "parser",
-        "converter"
-    ],
-    "version": "dev",
-    "minimum-stability": "dev",
-    "autoload": {
-        "classmap": ["src/"]
-    },
-    "require": {
-        "php": ">=5.6"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^6.5"
+  "name": "andriy-svirin/mt942-php",
+  "type": "library",
+  "description": "PHP library for parse MT942 Swift format.",
+  "keywords": [
+    "mt942",
+    "swift",
+    "PHP",
+    "parser",
+    "converter"
+  ],
+  "version": "dev",
+  "minimum-stability": "dev",
+  "autoload": {
+    "psr-4": {
+      "AndriySvirin\\MT942\\": "src"
     }
-},
+  },
+  "require": {
+    "php": ">=5.6"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^6.5"
+  }
+}
