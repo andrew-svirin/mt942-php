@@ -7,13 +7,18 @@ use AndriySvirin\MT942\models\Transaction;
 /**
  * Main MT942 parser class.
  */
-final class MT942Adapter
+final class MT942Normalizer
 {
 
    /**
-    * Transaction Reference Number
+    * Transaction Reference Number code.
     */
-   const TRANSACTION_TRN = '20';
+   const TRANSACTION_CODE_TRN_REF_NUM = '20';
+
+   /**
+    * Account Identification code.
+    */
+   const TRANSACTION_CODE_ACCOUNT_ID= '25';
 
    /**
     * Default delimiter.
@@ -42,28 +47,42 @@ final class MT942Adapter
    /**
     * Decode string with transactions.
     * @param string $str
+    *    Contains encoded information about transactions.
     * @return Transaction[]
     */
-   public function decode($str)
+   public function normalize($str)
    {
       $records = explode($this->delimiter, $str);
       $transactions = [];
       foreach ($records as $record)
       {
-         $transactions[] = $this->decodeRecord($record);
+         $transactions[] = $this->normalizeRecord($record);
       }
       return $transactions;
    }
 
    /**
     * @param string $record
+    *   Contains encoded information about transactions.
     * @return Transaction
     */
-   private function decodeRecord($record)
+   private function normalizeRecord($record)
    {
+      // Extract from record pairs code and message, all other keys are overhead.
+      preg_match_all('/:(?!\n)(?<code>[0-9A-Z]*):(?<message>((?!\r\n:).)*)/s', $record, $transactionDetails, PREG_SET_ORDER);
       $transaction = new Transaction();
-      // TODO: Slice on arrays.
-      $rows = preg_match_all('/:(?!\n)([0-9A-Z]*):(((?!\n:).)*)/s', $record, $matches);
+      foreach ($transactionDetails as $transactionDetail)
+      {
+         switch ($transactionDetail['code'])
+         {
+            case self::TRANSACTION_CODE_TRN_REF_NUM:
+               $transaction->setTrnRefNr($transactionDetail['message']);
+               break;
+            case self::TRANSACTION_CODE_ACCOUNT_ID:
+               $transaction->setAccountId($transactionDetail['message']);
+               break;
+         }
+      }
       return $transaction;
       $stLine = [];
       $stDesc = [];
@@ -74,7 +93,7 @@ final class MT942Adapter
          $value = rtrim(trim($rowData[1]), ',');
          switch ($key)
          {
-            case self::TRANSACTION_TRN:
+            case self::TRANSACTION_CODE_TRN_REF_NUM:
                $transaction->trn = $value;
                break;
             case '25': // Account Identification

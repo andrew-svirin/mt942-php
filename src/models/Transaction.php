@@ -10,27 +10,25 @@ class Transaction
 
    /**
     * Transaction Reference Number.
+    * This field specifies the reference assigned byt the Sender to unambiguously identify the message.
     * @var string
     */
-   private $trnRefNum;
+   private $trnRefNr;
 
    /**
-    * Related reference.
-    * @var string
-    */
-   private $relRef;
-
-   /**
-    * Account identification.
-    * @var string
+    * Account Identification.
+    * This field identifies the account for which the statement is sent.
+    * @var AccountIdentification
     */
    private $accountId;
 
    /**
-    * Sequence number
-    * @var string
+    * Statement Number.
+    * This field contains the sequential number of the statement, optionally followed by the sequence number of
+    * the message within that statement when more than one message is sent for one statement.
+    * @var StatementNumber
     */
-   private $sequenceNum;
+   private $statementNr;
 
    /**
     * Floor limit indicator credit
@@ -65,17 +63,49 @@ class Transaction
    /**
     * @return string
     */
-   public function getTrnRefNum()
+   public function getTrnRefNr()
    {
-      return $this->trnRefNum;
+      return $this->trnRefNr;
    }
 
    /**
     * @param string $value
     */
-   public function setTrnRefNum($value)
+   public function setTrnRefNr($value)
    {
-      $this->trnRefNum = $value;
+      $this->trnRefNr = $value;
+   }
+
+   /**
+    * @return string
+    */
+   public function getRelRef()
+   {
+      return $this->relRef;
+   }
+
+   /**
+    * @param string $value
+    */
+   public function setRelRef($value)
+   {
+      $this->relRef = $value;
+   }
+
+   /**
+    * @return string
+    */
+   public function getAccountId()
+   {
+      return $this->accountId;
+   }
+
+   /**
+    * @param string $value
+    */
+   public function setAccountId($value)
+   {
+      $this->accountId = $value;
    }
 
 }
