@@ -21,3 +21,4 @@ $result = MT942::fromString('...');
 
 Validate:
 https://lostechies.com/jimmybogard/2007/10/24/entity-validation-with-visitors-and-extension-methods/
+https://designpatternsphp.readthedocs.io/en/latest/Structural/Decorator/README.html
