@@ -2,9 +2,6 @@
 
 namespace AndriySvirin\MT942\models;
 
-/**
- * Transaction class used for list of main entities.
- */
 class StatementNumber
 {
 
@@ -13,7 +10,7 @@ class StatementNumber
     * The statement number should be reset to 1 in beginning of every day.
     * @var string
     */
-   private $statementNum;
+   private $statementNr;
 
    /**
     * Sequence Number.
@@ -23,6 +20,38 @@ class StatementNumber
     * The sequence number must be incremented by one for each additional message.
     * @var
     */
-   private $sequenceNum;
+   private $sequenceNr;
+
+   /**
+    * @return string
+    */
+   public function getStatementNr(): string
+   {
+      return $this->statementNr;
+   }
+
+   /**
+    * @param string $value
+    */
+   public function setStatementNr(string $value)
+   {
+      $this->statementNr = $value;
+   }
+
+   /**
+    * @return mixed
+    */
+   public function getSequenceNr()
+   {
+      return $this->sequenceNr;
+   }
+
+   /**
+    * @param mixed $value
+    */
+   public function setSequenceNr($value)
+   {
+      $this->sequenceNr = $value;
+   }
 
 }

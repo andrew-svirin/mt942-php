@@ -2,6 +2,8 @@
 
 namespace AndriySvirin\MT942;
 
+use AndriySvirin\MT942\models\AccountIdentification;
+use AndriySvirin\MT942\models\StatementNumber;
 use AndriySvirin\MT942\models\Transaction;
 
 /**
@@ -11,14 +13,11 @@ final class MT942Normalizer
 {
 
    /**
-    * Transaction Reference Number code.
+    * Transaction codes.
     */
-   const TRANSACTION_CODE_TRN_REF_NUM = '20';
-
-   /**
-    * Account Identification code.
-    */
-   const TRANSACTION_CODE_ACCOUNT_ID= '25';
+   const TRANSACTION_CODE_TRN_REF_NR = '20';
+   const TRANSACTION_CODE_ACCOUNT_ID = '25';
+   const TRANSACTION_CODE_STATEMENT_NR = '28C';
 
    /**
     * Default delimiter.
@@ -45,7 +44,7 @@ final class MT942Normalizer
    }
 
    /**
-    * Decode string with transactions.
+    * Normalize string with list of transactions.
     * @param string $str
     *    Contains encoded information about transactions.
     * @return Transaction[]
@@ -56,30 +55,72 @@ final class MT942Normalizer
       $transactions = [];
       foreach ($records as $record)
       {
-         $transactions[] = $this->normalizeRecord($record);
+         $transactions[] = $this->normalizeTransaction($record);
       }
       return $transactions;
    }
 
    /**
-    * @param string $record
+    * Normalize transaction account identification from string.
+    * @param string $str
+    * @return AccountIdentification
+    */
+   private function normalizeAccountIdentification(string $str): AccountIdentification
+   {
+      $accId = new AccountIdentification();
+      preg_match_all('/(?<bic>[0-9A-Z]*)\/(?<acc_nr>[0-9A-Z]*)/s', $str, $details, PREG_SET_ORDER);
+      if (!empty($details[0]['bic']) && !empty($details[0]['acc_nr']))
+      {
+         $accId->setTypeA();
+         $accId->setBIC($details[0]['bic']);
+         $accId->setAccNr($details[0]['acc_nr']);
+      }
+      else
+      {
+         preg_match_all('/(?<country_code>[0-9A-Z]{2})(?<control_code>[0-9A-Z]{2})(?<bban>[0-9A-Z]*)/s', $str, $details, PREG_SET_ORDER);
+         $accId->setTypeB();
+         $accId->setIBANCountryCode($details[0]['country_code']);
+         $accId->setIBANControlCode($details[0]['control_code']);
+         $accId->setIBANBBAN($details[0]['bban']);
+      }
+      return $accId;
+   }
+
+   /**
+    * @param string $str
+    * @return StatementNumber
+    */
+   private function normalizeStatementNr(string $str): StatementNumber
+   {
+      $statementNr = new StatementNumber();
+      preg_match_all('/(?<statement_nr>[0-9A-Z]*)\/(?<sequence_nr>[0-9A-Z]*)/s', $str, $details, PREG_SET_ORDER);
+      $statementNr->setStatementNr($details[0]['statement_nr']);
+      $statementNr->setSequenceNr($details[0]['sequence_nr']);
+      return $statementNr;
+   }
+
+   /**
+    * @param string $str
     *   Contains encoded information about transactions.
     * @return Transaction
     */
-   private function normalizeRecord($record)
+   private function normalizeTransaction(string $str)
    {
       // Extract from record pairs code and message, all other keys are overhead.
-      preg_match_all('/:(?!\n)(?<code>[0-9A-Z]*):(?<message>((?!\r\n:).)*)/s', $record, $transactionDetails, PREG_SET_ORDER);
+      preg_match_all('/:(?!\n)(?<code>[0-9A-Z]*):(?<message>((?!\r\n:).)*)/s', $str, $transactionDetails, PREG_SET_ORDER);
       $transaction = new Transaction();
       foreach ($transactionDetails as $transactionDetail)
       {
          switch ($transactionDetail['code'])
          {
-            case self::TRANSACTION_CODE_TRN_REF_NUM:
+            case self::TRANSACTION_CODE_TRN_REF_NR:
                $transaction->setTrnRefNr($transactionDetail['message']);
                break;
             case self::TRANSACTION_CODE_ACCOUNT_ID:
-               $transaction->setAccountId($transactionDetail['message']);
+               $transaction->setAccId($this->normalizeAccountIdentification($transactionDetail['message']));
+               break;
+            case self::TRANSACTION_CODE_STATEMENT_NR:
+               $transaction->setStatementNr($this->normalizeStatementNr($transactionDetail['message']));
                break;
          }
       }
@@ -93,7 +134,7 @@ final class MT942Normalizer
          $value = rtrim(trim($rowData[1]), ',');
          switch ($key)
          {
-            case self::TRANSACTION_CODE_TRN_REF_NUM:
+            case self::TRANSACTION_CODE_TRN_REF_NR:
                $transaction->trn = $value;
                break;
             case '25': // Account Identification

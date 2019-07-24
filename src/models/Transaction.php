@@ -20,7 +20,7 @@ class Transaction
     * This field identifies the account for which the statement is sent.
     * @var AccountIdentification
     */
-   private $accountId;
+   private $accId;
 
    /**
     * Statement Number.
@@ -77,35 +77,35 @@ class Transaction
    }
 
    /**
-    * @return string
+    * @return AccountIdentification
     */
-   public function getRelRef()
+   public function getAccId()
    {
-      return $this->relRef;
+      return $this->accId;
    }
 
    /**
-    * @param string $value
+    * @param AccountIdentification $value
     */
-   public function setRelRef($value)
+   public function setAccId(AccountIdentification $value)
    {
-      $this->relRef = $value;
+      $this->accId = $value;
    }
 
    /**
-    * @return string
+    * @return StatementNumber
     */
-   public function getAccountId()
+   public function getStatementNr(): StatementNumber
    {
-      return $this->accountId;
+      return $this->statementNr;
    }
 
    /**
-    * @param string $value
+    * @param StatementNumber $value
     */
-   public function setAccountId($value)
+   public function setStatementNr(StatementNumber $value)
    {
-      $this->accountId = $value;
+      $this->statementNr = $value;
    }
 
 }
