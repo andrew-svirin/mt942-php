@@ -32,7 +32,7 @@ class Transaction
 
    /**
     * Floor Limit Indicator.
-    * This field specifies the minimum value an order must have to.
+    * This field specifies the minimum value an order must have to be individually delivered.
     * @var FloorLimitIndicator
     */
    private $floorLimitIndicator;
