@@ -2,6 +2,9 @@
 
 namespace AndriySvirin\MT942\models;
 
+/**
+ * Statement Number specifies transaction operation numeration.
+ */
 class StatementNumber
 {
 

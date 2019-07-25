@@ -3,7 +3,8 @@
 namespace AndriySvirin\MT942\models;
 
 /**
- * Account Identification. Can have one of format A or B.
+ * Account Identification specifies Bank Person Account.
+ * Can have one of format A or B.
  * There type A is described by IBAN & BAC.
  * There type B is described by country code & account number.
  * @see IBAN standard.

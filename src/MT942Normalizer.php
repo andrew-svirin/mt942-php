@@ -3,6 +3,7 @@
 namespace AndriySvirin\MT942;
 
 use AndriySvirin\MT942\models\AccountIdentification;
+use AndriySvirin\MT942\models\FloorLimitIndicator;
 use AndriySvirin\MT942\models\StatementNumber;
 use AndriySvirin\MT942\models\Transaction;
 
@@ -18,6 +19,7 @@ final class MT942Normalizer
    const TRANSACTION_CODE_TRN_REF_NR = '20';
    const TRANSACTION_CODE_ACCOUNT_ID = '25';
    const TRANSACTION_CODE_STATEMENT_NR = '28C';
+   const TRANSACTION_CODE_FLOOR_LIMIT_INDICATOR = '34F';
 
    /**
     * Default delimiter.
@@ -44,59 +46,74 @@ final class MT942Normalizer
    }
 
    /**
-    * Normalize string with list of transactions.
-    * @param string $str
-    *    Contains encoded information about transactions.
+    * Normalize string with list of @param string $str Encoded entity.
     * @return Transaction[]
+    * @see Transaction.
     */
    public function normalize($str)
    {
       $records = explode($this->delimiter, $str);
-      $transactions = [];
+      $result = [];
       foreach ($records as $record)
       {
-         $transactions[] = $this->normalizeTransaction($record);
+         $result[] = $this->normalizeTransaction($record);
       }
-      return $transactions;
+      return $result;
    }
 
    /**
-    * Normalize transaction account identification from string.
-    * @param string $str
+    * Normalize transaction @param string $str Encoded entity.
     * @return AccountIdentification
+    * @see AccountIdentification from string.
     */
    private function normalizeAccountIdentification(string $str): AccountIdentification
    {
-      $accId = new AccountIdentification();
+      $result = new AccountIdentification();
       preg_match_all('/(?<bic>[0-9A-Z]*)\/(?<acc_nr>[0-9A-Z]*)/s', $str, $details, PREG_SET_ORDER);
       if (!empty($details[0]['bic']) && !empty($details[0]['acc_nr']))
       {
-         $accId->setTypeA();
-         $accId->setBIC($details[0]['bic']);
-         $accId->setAccNr($details[0]['acc_nr']);
+         $result->setTypeA();
+         $result->setBIC($details[0]['bic']);
+         $result->setAccNr($details[0]['acc_nr']);
       }
       else
       {
          preg_match_all('/(?<country_code>[0-9A-Z]{2})(?<control_code>[0-9A-Z]{2})(?<bban>[0-9A-Z]*)/s', $str, $details, PREG_SET_ORDER);
-         $accId->setTypeB();
-         $accId->setIBANCountryCode($details[0]['country_code']);
-         $accId->setIBANControlCode($details[0]['control_code']);
-         $accId->setIBANBBAN($details[0]['bban']);
+         $result->setTypeB();
+         $result->setIBANCountryCode($details[0]['country_code']);
+         $result->setIBANControlCode($details[0]['control_code']);
+         $result->setIBANBBAN($details[0]['bban']);
       }
-      return $accId;
+      return $result;
    }
 
    /**
-    * @param string $str
+    * Normalize transaction @param string $str Encoded entity.
     * @return StatementNumber
+    * @see StatementNumber from string.
     */
    private function normalizeStatementNr(string $str): StatementNumber
    {
-      $statementNr = new StatementNumber();
+      $result = new StatementNumber();
       preg_match_all('/(?<statement_nr>[0-9A-Z]*)\/(?<sequence_nr>[0-9A-Z]*)/s', $str, $details, PREG_SET_ORDER);
-      $statementNr->setStatementNr($details[0]['statement_nr']);
-      $statementNr->setSequenceNr($details[0]['sequence_nr']);
-      return $statementNr;
+      $result->setStatementNr($details[0]['statement_nr']);
+      $result->setSequenceNr($details[0]['sequence_nr']);
+      return $result;
+   }
+
+   /**
+    * Normalize transaction @param string $str
+    * @return FloorLimitIndicator
+    * @see FloorLimitIndicator from string.
+    */
+   private function normalizeFloorLimitIndicator(string $str): FloorLimitIndicator
+   {
+      $result = new FloorLimitIndicator();
+      preg_match_all('/(?<currency>[A-Z]{3})(?<type>[A-Z]{0,1})(?<amount>[0-9,]*)/s', $str, $details, PREG_SET_ORDER);
+      $result->setCurrency($details[0]['currency']);
+      $result->setType(!empty($details[0]['type']) ? $details[0]['type'] : null);
+      $result->setAmount((float)$details[0]['amount']);
+      return $result;
    }
 
    /**
@@ -121,6 +138,9 @@ final class MT942Normalizer
                break;
             case self::TRANSACTION_CODE_STATEMENT_NR:
                $transaction->setStatementNr($this->normalizeStatementNr($transactionDetail['message']));
+               break;
+            case self::TRANSACTION_CODE_FLOOR_LIMIT_INDICATOR:
+               $transaction->setFloorLimitIndicator($this->normalizeFloorLimitIndicator($transactionDetail['message']));
                break;
          }
       }

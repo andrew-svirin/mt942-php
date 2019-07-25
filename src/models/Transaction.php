@@ -31,6 +31,13 @@ class Transaction
    private $statementNr;
 
    /**
+    * Floor Limit Indicator.
+    * This field specifies the minimum value an order must have to.
+    * @var FloorLimitIndicator
+    */
+   private $floorLimitIndicator;
+
+   /**
     * Floor limit indicator credit
     * @var string
     */
@@ -53,7 +60,6 @@ class Transaction
     * @var string
     */
    private $credit;
-
    /**
     * Statements.
     * @var Statement[]
@@ -106,6 +112,13 @@ class Transaction
    public function setStatementNr(StatementNumber $value)
    {
       $this->statementNr = $value;
+   }
+   /**
+    * @param FloorLimitIndicator $value
+    */
+   public function setFloorLimitIndicator(FloorLimitIndicator $value)
+   {
+      $this->floorLimitIndicator = $value;
    }
 
 }
