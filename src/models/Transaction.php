@@ -46,16 +46,16 @@ class Transaction
    private $datetimeIndicator;
 
    /**
-    * Numbers and sum of debit entries
-    * @var string
+    * Numbers and sum of debit entries.
+    * @var Summary
     */
-   private $debit;
+   private $summaryDebit;
 
    /**
-    * Numbers and sum of credit entries
-    * @var string
+    * Numbers and sum of credit entries.
+    * @var Summary
     */
-   private $credit;
+   private $summaryCredit;
    /**
     * Statements.
     * @var Statement[]
@@ -126,11 +126,43 @@ class Transaction
    }
 
    /**
-    * @param DateTime $datetimeIndicator
+    * @param DateTime $value
     */
-   public function setDatetimeIndicator(DateTime $datetimeIndicator)
+   public function setDatetimeIndicator(DateTime $value)
    {
-      $this->datetimeIndicator = $datetimeIndicator;
+      $this->datetimeIndicator = $value;
+   }
+
+   /**
+    * @return Summary
+    */
+   public function getSummaryDebit(): Summary
+   {
+      return $this->summaryDebit;
+   }
+
+   /**
+    * @param Summary $value
+    */
+   public function setSummaryDebit(Summary $value)
+   {
+      $this->summaryDebit = $value;
+   }
+
+   /**
+    * @return Summary
+    */
+   public function getSummaryCredit(): Summary
+   {
+      return $this->summaryCredit;
+   }
+
+   /**
+    * @param Summary $value
+    */
+   public function setSummaryCredit(Summary $value)
+   {
+      $this->summaryCredit = $value;
    }
 
 }

@@ -5,6 +5,7 @@ namespace AndriySvirin\MT942;
 use AndriySvirin\MT942\models\AccountIdentification;
 use AndriySvirin\MT942\models\FloorLimitIndicator;
 use AndriySvirin\MT942\models\StatementNumber;
+use AndriySvirin\MT942\models\Summary;
 use AndriySvirin\MT942\models\Transaction;
 use DateTime;
 
@@ -22,6 +23,8 @@ final class MT942Normalizer
    const TRANSACTION_CODE_STATEMENT_NR = '28C';
    const TRANSACTION_CODE_FLOOR_LIMIT_INDICATOR = '34F';
    const TRANSACTION_CODE_DATETIME_INDICATOR = '13';
+   const TRANSACTION_CODE_SUMMARY_DEBIT = '90D';
+   const TRANSACTION_CODE_SUMMARY_CREDIT = '90C';
 
    /**
     * Default delimiter.
@@ -70,8 +73,8 @@ final class MT942Normalizer
     */
    private function normalizeAccountIdentification(string $str): AccountIdentification
    {
-      $result = new AccountIdentification();
       preg_match_all('/(?<bic>[0-9A-Z]*)\/(?<acc_nr>[0-9A-Z]*)/s', $str, $details, PREG_SET_ORDER);
+      $result = new AccountIdentification();
       if (!empty($details[0]['bic']) && !empty($details[0]['acc_nr']))
       {
          $result->setTypeA();
@@ -96,8 +99,8 @@ final class MT942Normalizer
     */
    private function normalizeStatementNr(string $str): StatementNumber
    {
-      $result = new StatementNumber();
       preg_match_all('/(?<statement_nr>[0-9A-Z]*)\/(?<sequence_nr>[0-9A-Z]*)/s', $str, $details, PREG_SET_ORDER);
+      $result = new StatementNumber();
       $result->setStatementNr($details[0]['statement_nr']);
       $result->setSequenceNr($details[0]['sequence_nr']);
       return $result;
@@ -110,11 +113,12 @@ final class MT942Normalizer
     */
    private function normalizeFloorLimitIndicator(string $str): FloorLimitIndicator
    {
-      $result = new FloorLimitIndicator();
       preg_match_all('/(?<currency>[A-Z]{3})(?<type>[A-Z]{0,1})(?<amount>[0-9,]*)/s', $str, $details, PREG_SET_ORDER);
-      $result->setCurrency($details[0]['currency']);
+      $result = new FloorLimitIndicator();
       $result->setType(!empty($details[0]['type']) ? $details[0]['type'] : null);
-      $result->setAmount((float)$details[0]['amount']);
+      $money = $result->getMoney();
+      $money->setCurrency($details[0]['currency']);
+      $money->setAmount((float)$details[0]['amount']);
       return $result;
    }
 
@@ -126,6 +130,22 @@ final class MT942Normalizer
    private function normalizeDatetimeIndicator(string $str): DateTime
    {
       $result = DateTime::createFromFormat('ymdHi', $str);
+      return $result;
+   }
+
+   /**
+    * Normalize transaction Debit or Credit Summary from string.
+    * @param string $str Encoded entity.
+    * @return Summary
+    */
+   private function normalizeSummary(string $str): Summary
+   {
+      preg_match_all('/(?<entries_nr>[0-9]{1,5})(?<currency>[A-Z]{3})(?<amount>[0-9,]*)/s', $str, $details, PREG_SET_ORDER);
+      $result = new Summary();
+      $result->setEntriesNr($details[0]['entries_nr']);
+      $money = $result->getMoney();
+      $money->setCurrency($details[0]['currency']);
+      $money->setAmount((float)$details[0]['amount']);
       return $result;
    }
 
@@ -157,6 +177,12 @@ final class MT942Normalizer
                break;
             case self::TRANSACTION_CODE_DATETIME_INDICATOR:
                $transaction->setDatetimeIndicator($this->normalizeDatetimeIndicator($transactionDetail['message']));
+               break;
+            case self::TRANSACTION_CODE_SUMMARY_DEBIT:
+               $transaction->setSummaryDebit($this->normalizeSummary($transactionDetail['message']));
+               break;
+            case self::TRANSACTION_CODE_SUMMARY_CREDIT:
+               $transaction->setSummaryCredit($this->normalizeSummary($transactionDetail['message']));
                break;
          }
       }

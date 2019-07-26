@@ -9,13 +9,6 @@ class FloorLimitIndicator
 {
 
    /**
-    * ISO code.
-    *
-    * @var string
-    */
-   private $currency;
-
-   /**
     * Debit or Credit mark.
     *
     * @var string [D|C]
@@ -23,26 +16,13 @@ class FloorLimitIndicator
    private $type;
 
    /**
-    * Amount.
-    *
-    * @var float
+    * @var Money
     */
-   private $amount;
+   private $money;
 
-   /**
-    * @return string
-    */
-   public function getCurrency(): string
+   public function __construct()
    {
-      return $this->currency;
-   }
-
-   /**
-    * @param string $value
-    */
-   public function setCurrency(string $value)
-   {
-      $this->currency = $value;
+      $this->money = new Money();
    }
 
    /**
@@ -62,20 +42,11 @@ class FloorLimitIndicator
    }
 
    /**
-    * @return float
+    * @return Money
     */
-   public function getAmount(): float
+   public function getMoney(): Money
    {
-      return $this->amount;
+      return $this->money;
    }
-
-   /**
-    * @param float $value
-    */
-   public function setAmount(float $value)
-   {
-      $this->amount = $value;
-   }
-
 
 }
