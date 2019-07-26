@@ -6,6 +6,7 @@ use AndriySvirin\MT942\models\AccountIdentification;
 use AndriySvirin\MT942\models\FloorLimitIndicator;
 use AndriySvirin\MT942\models\StatementNumber;
 use AndriySvirin\MT942\models\Transaction;
+use DateTime;
 
 /**
  * Main MT942 parser class.
@@ -20,6 +21,7 @@ final class MT942Normalizer
    const TRANSACTION_CODE_ACCOUNT_ID = '25';
    const TRANSACTION_CODE_STATEMENT_NR = '28C';
    const TRANSACTION_CODE_FLOOR_LIMIT_INDICATOR = '34F';
+   const TRANSACTION_CODE_DATETIME_INDICATOR = '13';
 
    /**
     * Default delimiter.
@@ -46,9 +48,9 @@ final class MT942Normalizer
    }
 
    /**
-    * Normalize string with list of @param string $str Encoded entity.
+    * Normalize string with list of Transactions from string.
+    * @param string $str Encoded entity.
     * @return Transaction[]
-    * @see Transaction.
     */
    public function normalize($str)
    {
@@ -62,9 +64,9 @@ final class MT942Normalizer
    }
 
    /**
-    * Normalize transaction @param string $str Encoded entity.
+    * Normalize transaction AccountIdentification from string.
+    * @param string $str Encoded entity.
     * @return AccountIdentification
-    * @see AccountIdentification from string.
     */
    private function normalizeAccountIdentification(string $str): AccountIdentification
    {
@@ -88,9 +90,9 @@ final class MT942Normalizer
    }
 
    /**
-    * Normalize transaction @param string $str Encoded entity.
+    * Normalize transaction StatementNumber from string.
+    * @param string $str Encoded entity.
     * @return StatementNumber
-    * @see StatementNumber from string.
     */
    private function normalizeStatementNr(string $str): StatementNumber
    {
@@ -102,9 +104,9 @@ final class MT942Normalizer
    }
 
    /**
-    * Normalize transaction @param string $str
+    * Normalize transaction FloorLimitIndicator from string.
+    * @param string $str Encoded entity.
     * @return FloorLimitIndicator
-    * @see FloorLimitIndicator from string.
     */
    private function normalizeFloorLimitIndicator(string $str): FloorLimitIndicator
    {
@@ -113,6 +115,17 @@ final class MT942Normalizer
       $result->setCurrency($details[0]['currency']);
       $result->setType(!empty($details[0]['type']) ? $details[0]['type'] : null);
       $result->setAmount((float)$details[0]['amount']);
+      return $result;
+   }
+
+   /**
+    * Normalize transaction DateTime from string.
+    * @param string $str Encoded entity.
+    * @return DateTime
+    */
+   private function normalizeDatetimeIndicator(string $str): DateTime
+   {
+      $result = DateTime::createFromFormat('ymdHi', $str);
       return $result;
    }
 
@@ -141,6 +154,9 @@ final class MT942Normalizer
                break;
             case self::TRANSACTION_CODE_FLOOR_LIMIT_INDICATOR:
                $transaction->setFloorLimitIndicator($this->normalizeFloorLimitIndicator($transactionDetail['message']));
+               break;
+            case self::TRANSACTION_CODE_DATETIME_INDICATOR:
+               $transaction->setDatetimeIndicator($this->normalizeDatetimeIndicator($transactionDetail['message']));
                break;
          }
       }

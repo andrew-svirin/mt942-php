@@ -2,6 +2,8 @@
 
 namespace AndriySvirin\MT942\models;
 
+use DateTime;
+
 /**
  * Transaction class used for list of main entities.
  */
@@ -38,16 +40,10 @@ class Transaction
    private $floorLimitIndicator;
 
    /**
-    * Floor limit indicator credit
-    * @var string
+    * Date & time indicator
+    * @var DateTime
     */
-   private $flIndicator;
-
-   /**
-    * Date/time indicator
-    * @var string
-    */
-   private $dtIndicator;
+   private $datetimeIndicator;
 
    /**
     * Numbers and sum of debit entries
@@ -119,6 +115,22 @@ class Transaction
    public function setFloorLimitIndicator(FloorLimitIndicator $value)
    {
       $this->floorLimitIndicator = $value;
+   }
+
+   /**
+    * @return DateTime
+    */
+   public function getDatetimeIndicator(): DateTime
+   {
+      return $this->datetimeIndicator;
+   }
+
+   /**
+    * @param DateTime $datetimeIndicator
+    */
+   public function setDatetimeIndicator(DateTime $datetimeIndicator)
+   {
+      $this->datetimeIndicator = $datetimeIndicator;
    }
 
 }
