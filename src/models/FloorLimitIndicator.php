@@ -13,7 +13,7 @@ class FloorLimitIndicator
     *
     * @var string [D|C]
     */
-   private $type;
+   private $dcMark;
 
    /**
     * @var Money
@@ -26,19 +26,19 @@ class FloorLimitIndicator
    }
 
    /**
-    * @return string
+    * @return null|string
     */
-   public function getType(): string
+   public function getDCMark()
    {
-      return $this->type;
+      return $this->dcMark;
    }
 
    /**
     * @param string $value
     */
-   public function setType(string $value = null)
+   public function setDCMark(string $value = null)
    {
-      $this->type = $value;
+      $this->dcMark = $value;
    }
 
    /**

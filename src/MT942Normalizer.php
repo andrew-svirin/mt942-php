@@ -118,9 +118,9 @@ final class MT942Normalizer
     */
    private function normalizeFloorLimitIndicator(string $str): FloorLimitIndicator
    {
-      preg_match_all('/(?<currency>[A-Z]{3})(?<type>[A-Z]{0,1})(?<amount>[0-9,]*)/s', $str, $details, PREG_SET_ORDER);
+      preg_match_all('/(?<currency>[A-Z]{3})(?<dc_mark>[A-Z]{0,1})(?<amount>[0-9,]*)/s', $str, $details, PREG_SET_ORDER);
       $result = new FloorLimitIndicator();
-      $result->setType(!empty($details[0]['type']) ? $details[0]['type'] : null);
+      $result->setDCMark(!empty($details[0]['dc_mark']) ? $details[0]['dc_mark'] : null);
       $money = $result->getMoney();
       $money->setCurrency($details[0]['currency']);
       $money->setAmount((float)$details[0]['amount']);
@@ -145,7 +145,14 @@ final class MT942Normalizer
     */
    private function normalizeStatementLine(string $str): StatementLine
    {
+      preg_match_all('/(?<value_date>[0-9]{6})(?<entry_date>[0-9]{0,4})(?<dc_mark>[A-Z]{1,2})(?<amount>[0-9,]{1,15})(?<transaction_type_id_code>[A-Z0-9]{4})(?<customer_ref>.{1,16})/s', $str, $details, PREG_SET_ORDER);
       $result = new StatementLine();
+      $result->setValueDate(DateTime::createFromFormat('ymd', $details[0]['value_date']));
+      $result->setEntryDate(!empty($details[0]['entry_date']) ? $details[0]['entry_date'] : null);
+      $result->setDcMark($details[0]['dc_mark']);
+      $result->setAmount((float)$details[0]['amount']);
+      $result->setTransactionTypeIdCode($details[0]['transaction_type_id_code']);
+      $result->setCustomerRef($details[0]['customer_ref']);
       return $result;
    }
 
