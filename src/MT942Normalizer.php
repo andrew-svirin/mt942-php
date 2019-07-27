@@ -4,6 +4,9 @@ namespace AndriySvirin\MT942;
 
 use AndriySvirin\MT942\models\AccountIdentification;
 use AndriySvirin\MT942\models\FloorLimitIndicator;
+use AndriySvirin\MT942\models\Statement;
+use AndriySvirin\MT942\models\StatementInformation;
+use AndriySvirin\MT942\models\StatementLine;
 use AndriySvirin\MT942\models\StatementNumber;
 use AndriySvirin\MT942\models\Summary;
 use AndriySvirin\MT942\models\Transaction;
@@ -23,6 +26,8 @@ final class MT942Normalizer
    const TRANSACTION_CODE_STATEMENT_NR = '28C';
    const TRANSACTION_CODE_FLOOR_LIMIT_INDICATOR = '34F';
    const TRANSACTION_CODE_DATETIME_INDICATOR = '13';
+   const TRANSACTION_CODE_STATEMENT_LINE = '61';
+   const TRANSACTION_CODE_STATEMENT_INFORMATION = '86';
    const TRANSACTION_CODE_SUMMARY_DEBIT = '90D';
    const TRANSACTION_CODE_SUMMARY_CREDIT = '90C';
 
@@ -55,7 +60,7 @@ final class MT942Normalizer
     * @param string $str Encoded entity.
     * @return Transaction[]
     */
-   public function normalize($str)
+   public function normalize($str): array
    {
       $records = explode($this->delimiter, $str);
       $result = [];
@@ -134,6 +139,28 @@ final class MT942Normalizer
    }
 
    /**
+    * Normalize transaction statement line from string.
+    * @param string $str Encoded entity.
+    * @return StatementLine
+    */
+   private function normalizeStatementLine(string $str): StatementLine
+   {
+      $result = new StatementLine();
+      return $result;
+   }
+
+   /**
+    * Normalize transaction statement line information from string.
+    * @param string $str Encoded entity.
+    * @return StatementInformation
+    */
+   private function normalizeStatementInformation(string $str): StatementInformation
+   {
+      $result = new StatementInformation();
+      return $result;
+   }
+
+   /**
     * Normalize transaction Debit or Credit Summary from string.
     * @param string $str Encoded entity.
     * @return Summary
@@ -150,11 +177,11 @@ final class MT942Normalizer
    }
 
    /**
-    * @param string $str
-    *   Contains encoded information about transactions.
+    *
+    * @param string $str Contains encoded information about transactions.
     * @return Transaction
     */
-   private function normalizeTransaction(string $str)
+   private function normalizeTransaction(string $str): Transaction
    {
       // Extract from record pairs code and message, all other keys are overhead.
       preg_match_all('/:(?!\n)(?<code>[0-9A-Z]*):(?<message>((?!\r\n:).)*)/s', $str, $transactionDetails, PREG_SET_ORDER);
@@ -173,10 +200,31 @@ final class MT942Normalizer
                $transaction->setStatementNr($this->normalizeStatementNr($transactionDetail['message']));
                break;
             case self::TRANSACTION_CODE_FLOOR_LIMIT_INDICATOR:
-               $transaction->setFloorLimitIndicator($this->normalizeFloorLimitIndicator($transactionDetail['message']));
+               // If floor limit indicator occur second time, then this is credit type.
+               if (null === $transaction->getFloorLimitIndicator())
+               {
+                  $transaction->setFloorLimitIndicator($this->normalizeFloorLimitIndicator($transactionDetail['message']));
+               }
+               else
+               {
+                  $transaction->setCreditFloorLimitIndicator($this->normalizeFloorLimitIndicator($transactionDetail['message']));
+               }
                break;
             case self::TRANSACTION_CODE_DATETIME_INDICATOR:
                $transaction->setDatetimeIndicator($this->normalizeDatetimeIndicator($transactionDetail['message']));
+               break;
+            case self::TRANSACTION_CODE_STATEMENT_LINE:
+               $statement = new Statement();
+               $transaction->addStatement($statement);
+               $statement->setLine($this->normalizeStatementLine($transactionDetail['message']));
+               break;
+            case self::TRANSACTION_CODE_STATEMENT_INFORMATION:
+               // Add statement information to current statement declared in row before.
+               /* @var $statement Statement */
+               if (isset($statement))
+               {
+                  $statement->setInformation($this->normalizeStatementInformation($transactionDetail['message']));
+               }
                break;
             case self::TRANSACTION_CODE_SUMMARY_DEBIT:
                $transaction->setSummaryDebit($this->normalizeSummary($transactionDetail['message']));
@@ -186,51 +234,6 @@ final class MT942Normalizer
                break;
          }
       }
-      return $transaction;
-      $stLine = [];
-      $stDesc = [];
-      foreach ($rows as $row)
-      {
-         $rowData = preg_split('/^:([^:]+):(((.*),$)|((.*),\n+$)|((.*)\n+$)|(.*$))/s', $row, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
-         $key = $rowData[0];
-         $value = rtrim(trim($rowData[1]), ',');
-         switch ($key)
-         {
-            case self::TRANSACTION_CODE_TRN_REF_NR:
-               $transaction->trn = $value;
-               break;
-            case '25': // Account Identification
-               $transaction->accountId = $value;
-               break;
-            case '28C': // Statement Number/Sequence Number
-               $transaction->sequenceNum = $value;
-               break;
-            case '34F': // Floor Limit Indicator (First Occurrence)  TODO: Floor Limit Indicator (Second Occurrence)
-               $transaction->flIndicator = $value;
-               break;
-            case '13': // Date/time Indication TODO: Could be 13D
-               $dateTime = preg_split('/^(.{2})(.{2})(.{2})(.{2})(.{2})$/s', $value, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
-               $transaction->dtIndicator = "20{$dateTime[0]}-{$dateTime[1]}-{$dateTime[2]} {$dateTime[3]}:{$dateTime[4]}";
-               break;
-            case '61': // Statement Line TODO: Optional TODO: List of codes TODO: customerReference
-               $stLine[] = $value;
-               break;
-            case '86': // Information to Account Owner TODO: Optional
-               $stDesc[] = $value;
-               break;
-            case '90D': // Number and Sum of Entries
-               $transaction->debit = $value;
-               break;
-            case '90C': // Number and Sum of Entries
-               $transaction->credit = $value;
-               break;
-         }
-      }
-      foreach ($stLine as $i => $sl)
-      {
-//         $transaction->statements[] = Statement::fromString($sl, $stDesc[$i]);
-      }
-
       return $transaction;
    }
 

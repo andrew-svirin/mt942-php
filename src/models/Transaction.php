@@ -40,6 +40,14 @@ class Transaction
    private $floorLimitIndicator;
 
    /**
+    * Floor Limit Indicator for Creit.
+    * This field specifies the minimum value an order must have to be individually delivered, but specifically for
+    * credit messages.
+    * @var FloorLimitIndicator
+    */
+   private $creditFloorLimitIndicator;
+
+   /**
     * Date & time indicator
     * @var DateTime
     */
@@ -56,8 +64,9 @@ class Transaction
     * @var Summary
     */
    private $summaryCredit;
+
    /**
-    * Statements.
+    * Statements for transaction can hold multiple operations.
     * @var Statement[]
     */
    private $statements = [];
@@ -109,12 +118,37 @@ class Transaction
    {
       $this->statementNr = $value;
    }
+
+   /**
+    * @return null|FloorLimitIndicator
+    */
+   public function getFloorLimitIndicator()
+   {
+      return $this->floorLimitIndicator;
+   }
+
    /**
     * @param FloorLimitIndicator $value
     */
    public function setFloorLimitIndicator(FloorLimitIndicator $value)
    {
       $this->floorLimitIndicator = $value;
+   }
+
+   /**
+    * @return null|FloorLimitIndicator
+    */
+   public function getCreditFloorLimitIndicator()
+   {
+      return $this->creditFloorLimitIndicator;
+   }
+
+   /**
+    * @param FloorLimitIndicator $creditFloorLimitIndicator
+    */
+   public function setCreditFloorLimitIndicator(FloorLimitIndicator $creditFloorLimitIndicator)
+   {
+      $this->creditFloorLimitIndicator = $creditFloorLimitIndicator;
    }
 
    /**
@@ -134,9 +168,25 @@ class Transaction
    }
 
    /**
-    * @return Summary
+    * @return Statement[]
     */
-   public function getSummaryDebit(): Summary
+   public function getStatements(): array
+   {
+      return $this->statements;
+   }
+
+   /**
+    * @param Statement $statement
+    */
+   public function addStatement(Statement $statement)
+   {
+      $this->statements[] = $statement;
+   }
+
+   /**
+    * @return null|Summary
+    */
+   public function getSummaryDebit()
    {
       return $this->summaryDebit;
    }
@@ -150,9 +200,9 @@ class Transaction
    }
 
    /**
-    * @return Summary
+    * @return null|Summary
     */
-   public function getSummaryCredit(): Summary
+   public function getSummaryCredit()
    {
       return $this->summaryCredit;
    }
