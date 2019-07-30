@@ -163,7 +163,13 @@ final class MT942Normalizer
     */
    private function normalizeStatementInformation(string $str): StatementInformation
    {
+      preg_match_all('/(?<id_code>[^?]*)(\?(?<nr>\d\d)(?<line>[^\?]*))/s', $str, $details, PREG_SET_ORDER);
       $result = new StatementInformation();
+      $result->setIdCode($details[0]['id_code']);
+      foreach ($details as $detail)
+      {
+         $result->addLine($detail['nr'], rtrim($detail['line']));
+      }
       return $result;
    }
 
