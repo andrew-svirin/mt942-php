@@ -19,8 +19,8 @@ final class MT942Test extends TestCase
 
    public function testTransactionListNormalization()
    {
-      $normalizer = new MT942Normalizer();
       $str = file_get_contents($this->dir . '/transactions.mt942');
+      $normalizer = new MT942Normalizer();
       $transactionList = $normalizer->normalize($str);
       $this->assertNotEmpty($transactionList->count());
       return $transactionList;
@@ -28,8 +28,8 @@ final class MT942Test extends TestCase
 
    public function testTransactionNormalization()
    {
-      $normalizer = new MT942Normalizer();
       $str = file_get_contents($this->dir . '/transaction.mt942');
+      $normalizer = new MT942Normalizer();
       $transaction = $normalizer->normalizeTransaction($str);
       $this->assertNotEmpty($transaction);
       return $transaction;

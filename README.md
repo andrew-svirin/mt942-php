@@ -16,8 +16,8 @@ Include
 ```
 Normalize:
 ```php
- $normalizer = new MT942Normalizer();
  $str = file_get_contents('path_to_file.mt942');
+ $normalizer = new MT942Normalizer();
  $transactionList = $normalizer->normalize($str);
 ```
 Validate:
