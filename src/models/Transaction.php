@@ -3,11 +3,13 @@
 namespace AndrewSvirin\MT942\models;
 
 use DateTime;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
 
 /**
- * Transaction class used for list of main entities.
+ * Transaction class used for handle main entity properties.
  *
  * @license http://www.opensource.org/licenses/mit-license.html  MIT License
  * @author Andrew Svirin
@@ -45,7 +47,7 @@ class Transaction
    private $floorLimitIndicator;
 
    /**
-    * Floor Limit Indicator for Creit.
+    * Floor Limit Indicator for Credit.
     * This field specifies the minimum value an order must have to be individually delivered, but specifically for
     * credit messages.
     * @var FloorLimitIndicator
@@ -227,9 +229,20 @@ class Transaction
     */
    public static function loadValidatorMetadata(ClassMetadata $metadata)
    {
-      // Must have a trnRefNr.
-      $metadata->addPropertyConstraint('trnRefNr', new NotBlank());
+      // Must have a trnRefNr. Max length is 16 characters. Pattern - word.
+      $metadata
+         ->addPropertyConstraints('trnRefNr', [
+            new NotBlank(),
+            new Length(['max' => 16]),
+            new Regex(['pattern' => '/\w/']),
+         ]);
       // Must have a accountIdentification.
       $metadata->addPropertyConstraint('accountIdentification', new NotBlank());
+      // Must have a statementNr.
+      $metadata->addPropertyConstraint('statementNr', new NotBlank());
+      // Must have a floorLimitIndicator.
+      $metadata->addPropertyConstraint('floorLimitIndicator', new NotBlank());
+      // Must have a datetimeIndicator.
+      $metadata->addPropertyConstraint('datetimeIndicator', new NotBlank());
    }
 }

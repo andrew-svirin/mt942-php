@@ -3,7 +3,7 @@
 namespace AndrewSvirin\MT942\models;
 
 /**
- * Floor Limit Indicator specifies the amount of money.
+ * Floor Limit Indicator specifies the payment information.
  *
  * @license http://www.opensource.org/licenses/mit-license.html  MIT License
  * @author Andrew Svirin
