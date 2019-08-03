@@ -1,0 +1,10 @@
+# IntellijIdea files
+.idea
+
+# Composer
+composer.lock
+vendor
+
+# Test data.
+Tests data
+tests/_data
