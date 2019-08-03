@@ -4,10 +4,12 @@ Banks uses MT942 format for payments data transition.
 More details about MT942 format you can find in Internet.
 
 ### Installation
-`composer require andrew-swirin/mt942-php`
+```bash
+$ composer require andrew-swirin/mt942-php
+```
 
 ### License
-@license http://www.opensource.org/licenses/mit-license.html  MIT License
+andrew-swirin/mt942-php is licensed under the MIT License, see the LICENSE file for details
 
 ### Example
 Include

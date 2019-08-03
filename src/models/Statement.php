@@ -3,7 +3,7 @@
 namespace AndrewSvirin\MT942\models;
 
 /**
- * Statement specifies information about transaction operation.
+ * Statement specifies information about Transaction operation.
  *
  * @license http://www.opensource.org/licenses/mit-license.html  MIT License
  * @author Andrew Svirin

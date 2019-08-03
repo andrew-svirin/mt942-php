@@ -5,7 +5,7 @@ namespace AndrewSvirin\MT942\models;
 use DateTime;
 
 /**
- * Statement Line specifies main information for statement.
+ * Statement Line specifies main information for Statement.
  *
  * @license http://www.opensource.org/licenses/mit-license.html  MIT License
  * @author Andrew Svirin

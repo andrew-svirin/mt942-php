@@ -3,7 +3,7 @@
 namespace AndrewSvirin\MT942\models;
 
 /**
- * Statement information specifies multiple additional options for statement for account owner purpose.
+ * Statement information specifies multiple additional options for Statement for account owner purpose.
  *
  * @license http://www.opensource.org/licenses/mit-license.html  MIT License
  * @author Andrew Svirin
