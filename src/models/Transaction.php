@@ -7,6 +7,7 @@ use DateTime;
 /**
  * Transaction class used for list of main entities.
  *
+ * @license http://www.opensource.org/licenses/mit-license.html  MIT License
  * @author Andrew Svirin
  */
 class Transaction

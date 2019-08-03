@@ -5,6 +5,7 @@ namespace AndrewSvirin\MT942\models;
 /**
  * Summary for transaction operations.
  *
+ * @license http://www.opensource.org/licenses/mit-license.html  MIT License
  * @author Andrew Svirin
  */
 class Summary

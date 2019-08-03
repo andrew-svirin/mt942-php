@@ -7,7 +7,7 @@ More details about MT942 format you can find on page https://www.google.com/sear
 `will add`
 
 ### License
-`will add`
+@license http://www.opensource.org/licenses/mit-license.html  MIT License
 
 ###Example:
 Include
