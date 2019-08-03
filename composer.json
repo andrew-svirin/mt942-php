@@ -1,5 +1,5 @@
 {
-  "name": "andriy-svirin/mt942-php",
+  "name": "andrew-svirin/mt942-php",
   "type": "library",
   "description": "PHP library for parse MT942 Swift format.",
   "keywords": [
@@ -13,7 +13,7 @@
   "minimum-stability": "dev",
   "autoload": {
     "psr-4": {
-      "AndriySvirin\\MT942\\": "src"
+      "AndrewSvirin\\MT942\\": "src"
     }
   },
   "require": {

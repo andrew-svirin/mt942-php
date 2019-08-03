@@ -1,9 +1,11 @@
 <?php
 
-namespace AndriySvirin\MT942\models;
+namespace AndrewSvirin\MT942\models;
 
 /**
  * Statement Number specifies transaction operation numeration.
+ *
+ * @author Andrew Svirin
  */
 class StatementNumber
 {

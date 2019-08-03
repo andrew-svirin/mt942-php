@@ -1,11 +1,13 @@
 <?php
 
-namespace AndriySvirin\MT942\models;
+namespace AndrewSvirin\MT942\models;
 
 use DateTime;
 
 /**
  * Transaction class used for list of main entities.
+ *
+ * @author Andrew Svirin
  */
 class Transaction
 {

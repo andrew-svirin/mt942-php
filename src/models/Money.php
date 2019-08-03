@@ -1,9 +1,11 @@
 <?php
 
-namespace AndriySvirin\MT942\models;
+namespace AndrewSvirin\MT942\models;
 
 /**
  * Money specifies currency and amount.
+ *
+ * @author Andrew Svirin
  */
 class Money
 {
