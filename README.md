@@ -18,3 +18,5 @@ Parse:
 ```
 $result = MT942::fromString('...');
 ```
+
+[![Build Status](https://travis-ci.com/andrew-svirin/mt942-php.svg?branch=master)](https://travis-ci.com/andrew-svirin/mt942-php)
