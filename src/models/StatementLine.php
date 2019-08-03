@@ -7,6 +7,7 @@ use DateTime;
 /**
  * Statement Line specifies main information for statement.
  *
+ * @license http://www.opensource.org/licenses/mit-license.html  MIT License
  * @author Andrew Svirin
  */
 class StatementLine

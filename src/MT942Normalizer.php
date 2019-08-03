@@ -15,6 +15,7 @@ use DateTime;
 /**
  * Main MT942 parser class.
  *
+ * @license http://www.opensource.org/licenses/mit-license.html  MIT License
  * @author Andrew Svirin
  */
 final class MT942Normalizer
