@@ -1,1 +1,20 @@
+sudo: false
+
 language: php
+
+php:
+  - 7.0
+  - 7.1
+  - 7.2
+  - nightly
+
+branches:
+  only:
+    - master
+
+cache:
+  directories:
+    - vendor
+
+before_script:
+  - composer update --dev --no-interaction
