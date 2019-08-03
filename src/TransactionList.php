@@ -22,6 +22,7 @@ class TransactionList implements \IteratorAggregate
 
    /**
     * {@inheritDoc}
+    * @return Transaction[]
     */
    public function getIterator(): ArrayIterator
    {

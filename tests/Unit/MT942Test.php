@@ -3,8 +3,8 @@
 namespace AndrewSvirin\tests\Unit;
 
 use AndrewSvirin\MT942\MT942Normalizer;
+use AndrewSvirin\MT942\MT942Validator;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Validator\Validation;
 
 /**
  * Class MT942Test.
@@ -17,15 +17,16 @@ final class MT942Test extends TestCase
 
    var $dir = __DIR__ . '/../_data';
 
-   public function testNormalizer()
+   public function testTransactionListNormalization()
    {
       $adapter = new MT942Normalizer();
       $str = file_get_contents($this->dir . '/transactions.mt942');
       $transactionList = $adapter->normalize($str);
       $this->assertNotEmpty($transactionList->count());
+      return $transactionList;
    }
 
-   public function testTransactionNormalizer()
+   public function testTransactionNormalization()
    {
       $adapter = new MT942Normalizer();
       $str = file_get_contents($this->dir . '/transaction.mt942');
@@ -34,13 +35,19 @@ final class MT942Test extends TestCase
       return $transaction;
    }
 
-   public function testValidator()
+   public function testTransactionListValidation()
    {
-      $transaction = $this->testTransactionNormalizer();
-      $validator = Validation::createValidatorBuilder()
-         ->addMethodMapping('loadTransactionValidatorMetadata')
-         ->getValidator();
-      $violationList = $validator->validate($transaction);
+      $transactionList = $this->testTransactionListNormalization();
+      $transactionValidator = new MT942Validator();
+      $violationList = $transactionValidator->validateList($transactionList);
+      $this->assertEmpty($violationList->count());
+   }
+
+   public function testTransactionValidation()
+   {
+      $transaction = $this->testTransactionNormalization();
+      $transactionValidator = new MT942Validator();
+      $violationList = $transactionValidator->validate($transaction);
       $this->assertEmpty($violationList->count());
    }
 

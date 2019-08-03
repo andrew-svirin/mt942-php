@@ -2,6 +2,10 @@
 
 namespace AndrewSvirin\MT942\models;
 
+use AndrewSvirin\MT942\MT942Validator;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Mapping\ClassMetadata;
+
 /**
  * Account Identification specifies Bank Person Account.
  * Can have one of format A or B.
@@ -69,6 +73,14 @@ class AccountIdentification
    public function setTypeB()
    {
       $this->type = self::TYPE_B;
+   }
+
+   /**
+    * @return string
+    */
+   public function getType(): string
+   {
+      return $this->type;
    }
 
    /**
@@ -149,6 +161,17 @@ class AccountIdentification
    public function setAccNr(string $value)
    {
       $this->accNr = $value;
+   }
+
+   /**
+    * Validation rules.
+    * @param ClassMetadata $metadata
+    * @see MT942Validator::getValidator()
+    */
+   public static function loadValidatorMetadata(ClassMetadata $metadata)
+   {
+      // Must have a type.
+      $metadata->addPropertyConstraint('type', new NotBlank());
    }
 
 }

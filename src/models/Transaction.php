@@ -3,6 +3,8 @@
 namespace AndrewSvirin\MT942\models;
 
 use DateTime;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Mapping\ClassMetadata;
 
 /**
  * Transaction class used for list of main entities.
@@ -25,7 +27,7 @@ class Transaction
     * This field identifies the account for which the statement is sent.
     * @var AccountIdentification
     */
-   private $accId;
+   private $accountIdentification;
 
    /**
     * Statement Number.
@@ -93,17 +95,17 @@ class Transaction
    /**
     * @return AccountIdentification
     */
-   public function getAccId()
+   public function getAccountIdentification()
    {
-      return $this->accId;
+      return $this->accountIdentification;
    }
 
    /**
     * @param AccountIdentification $value
     */
-   public function setAccId(AccountIdentification $value)
+   public function setAccountIdentification(AccountIdentification $value)
    {
-      $this->accId = $value;
+      $this->accountIdentification = $value;
    }
 
    /**
@@ -218,4 +220,16 @@ class Transaction
       $this->summaryCredit = $value;
    }
 
+   /**
+    * Validation rules.
+    * @param ClassMetadata $metadata
+    * @see MT942Validator::getValidator()
+    */
+   public static function loadValidatorMetadata(ClassMetadata $metadata)
+   {
+      // Must have a trnRefNr.
+      $metadata->addPropertyConstraint('trnRefNr', new NotBlank());
+      // Must have a accountIdentification.
+      $metadata->addPropertyConstraint('accountIdentification', new NotBlank());
+   }
 }
