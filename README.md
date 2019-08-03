@@ -12,7 +12,7 @@ More details about MT942 format you can find in Internet.
 ### Example:
 Include
 ```
-use AndrewSvirin\MT942;
+use AndrewSvirin\MT942\MT942Normalizer;
 ```
 Normalize:
 ```

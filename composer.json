@@ -9,7 +9,12 @@
     "parser",
     "converter"
   ],
-  "version": "dev",
+  "authors": [
+    {
+      "name": "Andrew Svirin"
+    }
+  ],
+    "version": "dev",
   "minimum-stability": "dev",
   "autoload": {
     "psr-4": {
@@ -17,7 +22,8 @@
     }
   },
   "require": {
-    "php": ">=7.0"
+    "php": "^7.0",
+    "symfony/validator": "^3.4"
   },
   "require-dev": {
     "phpunit/phpunit": "^6.5"

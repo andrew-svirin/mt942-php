@@ -61,15 +61,15 @@ final class MT942Normalizer
    /**
     * Normalize string with list of Transactions from string.
     * @param string $str Encoded entity.
-    * @return Transaction[]
+    * @return TransactionList
     */
-   public function normalize($str): array
+   public function normalize($str): TransactionList
    {
       $records = explode($this->delimiter, $str);
-      $result = [];
+      $result = new TransactionList();
       foreach ($records as $record)
       {
-         $result[] = $this->normalizeTransaction($record);
+         $result->add($this->normalizeTransaction($record));
       }
       return $result;
    }
