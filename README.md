@@ -11,14 +11,19 @@ More details about MT942 format you can find in Internet.
 
 ### Example
 Include
-```
+```php
  use AndrewSvirin\MT942\MT942Normalizer;
 ```
 Normalize:
-```
- $adapter = new MT942Normalizer();
+```php
+ $normalizer = new MT942Normalizer();
  $str = file_get_contents('path_to_file.mt942');
- $transactions = $adapter->normalize($str);
+ $transactionList = $normalizer->normalize($str);
+```
+Validate:
+```php      
+ $validator = new MT942Validator();
+ $violationList = $validator->validateList($transactionList);
 ```
 
 ### Statistic

@@ -19,18 +19,18 @@ final class MT942Test extends TestCase
 
    public function testTransactionListNormalization()
    {
-      $adapter = new MT942Normalizer();
+      $normalizer = new MT942Normalizer();
       $str = file_get_contents($this->dir . '/transactions.mt942');
-      $transactionList = $adapter->normalize($str);
+      $transactionList = $normalizer->normalize($str);
       $this->assertNotEmpty($transactionList->count());
       return $transactionList;
    }
 
    public function testTransactionNormalization()
    {
-      $adapter = new MT942Normalizer();
+      $normalizer = new MT942Normalizer();
       $str = file_get_contents($this->dir . '/transaction.mt942');
-      $transaction = $adapter->normalizeTransaction($str);
+      $transaction = $normalizer->normalizeTransaction($str);
       $this->assertNotEmpty($transaction);
       return $transaction;
    }
@@ -38,16 +38,16 @@ final class MT942Test extends TestCase
    public function testTransactionListValidation()
    {
       $transactionList = $this->testTransactionListNormalization();
-      $transactionValidator = new MT942Validator();
-      $violationList = $transactionValidator->validateList($transactionList);
+      $validator = new MT942Validator();
+      $violationList = $validator->validateList($transactionList);
       $this->assertEmpty($violationList->count());
    }
 
    public function testTransactionValidation()
    {
       $transaction = $this->testTransactionNormalization();
-      $transactionValidator = new MT942Validator();
-      $violationList = $transactionValidator->validate($transaction);
+      $validator = new MT942Validator();
+      $violationList = $validator->validate($transaction);
       $this->assertEmpty($violationList->count());
    }
 
