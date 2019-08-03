@@ -1,19 +1,21 @@
 <?php
 
-namespace AndriySvirin\MT942;
+namespace AndrewSvirin\MT942;
 
-use AndriySvirin\MT942\models\AccountIdentification;
-use AndriySvirin\MT942\models\FloorLimitIndicator;
-use AndriySvirin\MT942\models\Statement;
-use AndriySvirin\MT942\models\StatementInformation;
-use AndriySvirin\MT942\models\StatementLine;
-use AndriySvirin\MT942\models\StatementNumber;
-use AndriySvirin\MT942\models\Summary;
-use AndriySvirin\MT942\models\Transaction;
+use AndrewSvirin\MT942\models\AccountIdentification;
+use AndrewSvirin\MT942\models\FloorLimitIndicator;
+use AndrewSvirin\MT942\models\Statement;
+use AndrewSvirin\MT942\models\StatementInformation;
+use AndrewSvirin\MT942\models\StatementLine;
+use AndrewSvirin\MT942\models\StatementNumber;
+use AndrewSvirin\MT942\models\Summary;
+use AndrewSvirin\MT942\models\Transaction;
 use DateTime;
 
 /**
  * Main MT942 parser class.
+ *
+ * @author Andrew Svirin
  */
 final class MT942Normalizer
 {
@@ -69,6 +71,67 @@ final class MT942Normalizer
          $result[] = $this->normalizeTransaction($record);
       }
       return $result;
+   }
+
+   /**
+    * Normalize Transaction item.
+    * @param string $str Contains encoded information about transactions.
+    * @return Transaction
+    */
+   public function normalizeTransaction(string $str): Transaction
+   {
+      // Extract from record pairs code and message, all other keys are overhead.
+      preg_match_all('/:(?!\n)(?<code>[0-9A-Z]*):(?<message>((?!\r\n:).)*)/s', $str, $transactionDetails, PREG_SET_ORDER);
+      $transaction = new Transaction();
+      foreach ($transactionDetails as $transactionDetail)
+      {
+         switch ($transactionDetail['code'])
+         {
+            case self::TRANSACTION_CODE_TRN_REF_NR:
+               $transaction->setTrnRefNr($transactionDetail['message']);
+               break;
+            case self::TRANSACTION_CODE_ACCOUNT_ID:
+               $transaction->setAccId($this->normalizeAccountIdentification($transactionDetail['message']));
+               break;
+            case self::TRANSACTION_CODE_STATEMENT_NR:
+               $transaction->setStatementNr($this->normalizeStatementNr($transactionDetail['message']));
+               break;
+            case self::TRANSACTION_CODE_FLOOR_LIMIT_INDICATOR:
+               // If floor limit indicator occur second time, then this is credit type.
+               if (null === $transaction->getFloorLimitIndicator())
+               {
+                  $transaction->setFloorLimitIndicator($this->normalizeFloorLimitIndicator($transactionDetail['message']));
+               }
+               else
+               {
+                  $transaction->setCreditFloorLimitIndicator($this->normalizeFloorLimitIndicator($transactionDetail['message']));
+               }
+               break;
+            case self::TRANSACTION_CODE_DATETIME_INDICATOR:
+               $transaction->setDatetimeIndicator($this->normalizeDatetimeIndicator($transactionDetail['message']));
+               break;
+            case self::TRANSACTION_CODE_STATEMENT_LINE:
+               $statement = new Statement();
+               $transaction->addStatement($statement);
+               $statement->setLine($this->normalizeStatementLine($transactionDetail['message']));
+               break;
+            case self::TRANSACTION_CODE_STATEMENT_INFORMATION:
+               // Add statement information to current statement declared in row before.
+               /* @var $statement Statement */
+               if (isset($statement))
+               {
+                  $statement->setInformation($this->normalizeStatementInformation($transactionDetail['message']));
+               }
+               break;
+            case self::TRANSACTION_CODE_SUMMARY_DEBIT:
+               $transaction->setSummaryDebit($this->normalizeSummary($transactionDetail['message']));
+               break;
+            case self::TRANSACTION_CODE_SUMMARY_CREDIT:
+               $transaction->setSummaryCredit($this->normalizeSummary($transactionDetail['message']));
+               break;
+         }
+      }
+      return $transaction;
    }
 
    /**
@@ -187,67 +250,6 @@ final class MT942Normalizer
       $money->setCurrency($details[0]['currency']);
       $money->setAmount((float)$details[0]['amount']);
       return $result;
-   }
-
-   /**
-    *
-    * @param string $str Contains encoded information about transactions.
-    * @return Transaction
-    */
-   private function normalizeTransaction(string $str): Transaction
-   {
-      // Extract from record pairs code and message, all other keys are overhead.
-      preg_match_all('/:(?!\n)(?<code>[0-9A-Z]*):(?<message>((?!\r\n:).)*)/s', $str, $transactionDetails, PREG_SET_ORDER);
-      $transaction = new Transaction();
-      foreach ($transactionDetails as $transactionDetail)
-      {
-         switch ($transactionDetail['code'])
-         {
-            case self::TRANSACTION_CODE_TRN_REF_NR:
-               $transaction->setTrnRefNr($transactionDetail['message']);
-               break;
-            case self::TRANSACTION_CODE_ACCOUNT_ID:
-               $transaction->setAccId($this->normalizeAccountIdentification($transactionDetail['message']));
-               break;
-            case self::TRANSACTION_CODE_STATEMENT_NR:
-               $transaction->setStatementNr($this->normalizeStatementNr($transactionDetail['message']));
-               break;
-            case self::TRANSACTION_CODE_FLOOR_LIMIT_INDICATOR:
-               // If floor limit indicator occur second time, then this is credit type.
-               if (null === $transaction->getFloorLimitIndicator())
-               {
-                  $transaction->setFloorLimitIndicator($this->normalizeFloorLimitIndicator($transactionDetail['message']));
-               }
-               else
-               {
-                  $transaction->setCreditFloorLimitIndicator($this->normalizeFloorLimitIndicator($transactionDetail['message']));
-               }
-               break;
-            case self::TRANSACTION_CODE_DATETIME_INDICATOR:
-               $transaction->setDatetimeIndicator($this->normalizeDatetimeIndicator($transactionDetail['message']));
-               break;
-            case self::TRANSACTION_CODE_STATEMENT_LINE:
-               $statement = new Statement();
-               $transaction->addStatement($statement);
-               $statement->setLine($this->normalizeStatementLine($transactionDetail['message']));
-               break;
-            case self::TRANSACTION_CODE_STATEMENT_INFORMATION:
-               // Add statement information to current statement declared in row before.
-               /* @var $statement Statement */
-               if (isset($statement))
-               {
-                  $statement->setInformation($this->normalizeStatementInformation($transactionDetail['message']));
-               }
-               break;
-            case self::TRANSACTION_CODE_SUMMARY_DEBIT:
-               $transaction->setSummaryDebit($this->normalizeSummary($transactionDetail['message']));
-               break;
-            case self::TRANSACTION_CODE_SUMMARY_CREDIT:
-               $transaction->setSummaryCredit($this->normalizeSummary($transactionDetail['message']));
-               break;
-         }
-      }
-      return $transaction;
    }
 
 }

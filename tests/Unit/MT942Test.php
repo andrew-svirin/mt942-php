@@ -1,10 +1,15 @@
 <?php
 
-namespace AndriySvirin\tests\Unit;
+namespace AndrewSvirin\tests\Unit;
 
-use AndriySvirin\MT942\MT942Normalizer;
+use AndrewSvirin\MT942\MT942Normalizer;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Class MT942Test.
+ *
+ * @author Andrew Svirin
+ */
 final class MT942Test extends TestCase
 {
 

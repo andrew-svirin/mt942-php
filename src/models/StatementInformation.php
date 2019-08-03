@@ -1,9 +1,11 @@
 <?php
 
-namespace AndriySvirin\MT942\models;
+namespace AndrewSvirin\MT942\models;
 
 /**
  * Statement information specifies multiple additional options for statement for account owner purpose.
+ *
+ * @author Andrew Svirin
  */
 class StatementInformation
 {

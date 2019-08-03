@@ -1,11 +1,13 @@
 <?php
 
-namespace AndriySvirin\MT942\models;
+namespace AndrewSvirin\MT942\models;
 
 /**
  * Account Identification specifies Bank Person Account.
  * Can have one of format A or B.
  * @see IBAN standard.
+ *
+ * @author Andrew Svirin
  */
 class AccountIdentification
 {

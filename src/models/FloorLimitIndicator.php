@@ -1,9 +1,11 @@
 <?php
 
-namespace AndriySvirin\MT942\models;
+namespace AndrewSvirin\MT942\models;
 
 /**
  * Floor Limit Indicator specifies the amount of money.
+ *
+ * @author Andrew Svirin
  */
 class FloorLimitIndicator
 {

@@ -12,7 +12,7 @@ More details about MT942 format you can find on page https://www.google.com/sear
 ###Example:
 Include
 ```
-use Ukrinsoft\MT942;
+use AndrewSvirin\MT942;
 ```
 Parse:
 ```

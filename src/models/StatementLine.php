@@ -1,11 +1,13 @@
 <?php
 
-namespace AndriySvirin\MT942\models;
+namespace AndrewSvirin\MT942\models;
 
 use DateTime;
 
 /**
  * Statement Line specifies main information for statement.
+ *
+ * @author Andrew Svirin
  */
 class StatementLine
 {

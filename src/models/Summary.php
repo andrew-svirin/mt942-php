@@ -1,9 +1,11 @@
 <?php
 
-namespace AndriySvirin\MT942\models;
+namespace AndrewSvirin\MT942\models;
 
 /**
  * Summary for transaction operations.
+ *
+ * @author Andrew Svirin
  */
 class Summary
 {

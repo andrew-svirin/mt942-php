@@ -1,9 +1,11 @@
 <?php
 
-namespace AndriySvirin\MT942\models;
+namespace AndrewSvirin\MT942\models;
 
 /**
  * Statement specifies information about transaction operation.
+ *
+ * @author Andrew Svirin
  */
 class Statement
 {
