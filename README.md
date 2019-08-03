@@ -4,7 +4,7 @@ Banks uses MT942 format for payments data transition.
 More details about MT942 format you can find on page https://www.google.com/search?q=MT942
 
 ### How to install:
-`will add`
+`composer require andrew-swirin/mt942-php`
 
 ### License
 @license http://www.opensource.org/licenses/mit-license.html  MIT License
