@@ -7,4 +7,4 @@ vendor
 
 # Test data.
 Tests data
-tests/_data
+tests/_data/data
