@@ -92,7 +92,7 @@ final class MT942Normalizer
                $transaction->setTrnRefNr($transactionDetail['message']);
                break;
             case self::TRANSACTION_CODE_ACCOUNT_ID:
-               $transaction->setAccId($this->normalizeAccountIdentification($transactionDetail['message']));
+               $transaction->setAccountIdentification($this->normalizeAccountIdentification($transactionDetail['message']));
                break;
             case self::TRANSACTION_CODE_STATEMENT_NR:
                $transaction->setStatementNr($this->normalizeStatementNr($transactionDetail['message']));
