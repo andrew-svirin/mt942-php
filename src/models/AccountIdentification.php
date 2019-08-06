@@ -3,12 +3,15 @@
 namespace AndrewSvirin\MT942\models;
 
 use AndrewSvirin\MT942\MT942Validator;
+use Symfony\Component\Validator\Constraints\Choice;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
 
 /**
  * Account Identification specifies Bank Person Account.
- * Can have one of format A or B.
+ * Can have one of format Intentional or Internal.
  * @see IBAN standard.
  *
  * @license http://www.opensource.org/licenses/mit-license.html  MIT License
@@ -20,17 +23,17 @@ class AccountIdentification
    /**
     * Types.
     */
-   const TYPE_A = 'A';
-   const TYPE_B = 'B';
+   const FORMAT_BAN = 'BAN';
+   const FORMAT_IBAN = 'IBAN';
 
    /**
-    * Type.
-    * There type A is described by IBAN & BAC.
-    * There type B is described by country code & account number.
+    * Format.
+    * There format IBAN is described by IBAN.
+    * There format BAN is described by Bank and its Account.
     *
     * @var string
     */
-   private $type;
+   private $format;
 
    /**
     * IBAN country code.
@@ -65,22 +68,22 @@ class AccountIdentification
     */
    private $accNr;
 
-   public function setTypeA()
+   public function setTypeBAN()
    {
-      $this->type = self::TYPE_A;
+      $this->format = self::FORMAT_BAN;
    }
 
-   public function setTypeB()
+   public function setTypeIBAN()
    {
-      $this->type = self::TYPE_B;
+      $this->format = self::FORMAT_IBAN;
    }
 
    /**
     * @return string
     */
-   public function getType(): string
+   public function getFormat(): string
    {
-      return $this->type;
+      return $this->format;
    }
 
    /**
@@ -170,8 +173,41 @@ class AccountIdentification
     */
    public static function loadValidatorMetadata(ClassMetadata $metadata)
    {
-      // Must have a type.
-      $metadata->addPropertyConstraint('type', new NotBlank());
+      // Must have a format. From the listed options.
+      $metadata->addPropertyConstraints('format', [
+         new NotBlank(),
+         new Choice([self::FORMAT_BAN, self::FORMAT_IBAN])
+      ]);
+      // If format is IBAN, then ibanCountryCode must present and has specific length and pass character mask.
+      $metadata->addPropertyConstraints('ibanCountryCode', [
+         new NotBlank(['groups' => [self::FORMAT_IBAN]]),
+         new Length(['min' => 2, 'max' => 2]),
+         new Regex(['pattern' => '/^[A-Za-z]+$/', 'groups' => [self::FORMAT_IBAN]]),
+      ]);
+      // If format is IBAN, then ibanControlCode must present and has specific length and pass character mask.
+      $metadata->addPropertyConstraints('ibanControlCode', [
+         new NotBlank(['groups' => [self::FORMAT_IBAN]]),
+         new Length(['min' => 2, 'max' => 2]),
+         new Regex(['pattern' => '/^\d+$/', 'groups' => [self::FORMAT_IBAN]]),
+      ]);
+      // If format is IBAN, then ibanBBAN must present and has specific length and pass character mask.
+      $metadata->addPropertyConstraints('ibanBBAN', [
+         new NotBlank(['groups' => [self::FORMAT_IBAN]]),
+         new Length(['min' => 24, 'max' => 24]),
+         new Regex(['pattern' => '/^\d+$/', 'groups' => [self::FORMAT_IBAN]]),
+      ]);
+      // If format is BAN, then bic must present and has specific length and pass character mask.
+      $metadata->addPropertyConstraints('bic', [
+         new NotBlank(['groups' => [self::FORMAT_BAN]]),
+         new Length(['min' => 8, 'max' => 8]),
+         new Regex(['pattern' => '/^\w+$/', 'groups' => [self::FORMAT_BAN]]),
+      ]);
+      // If format is BAN, then accNr must present and has specific length and pass character mask.
+      $metadata->addPropertyConstraints('accNr', [
+         new NotBlank(['groups' => [self::FORMAT_BAN]]),
+         new Length(['max' => 12]),
+         new Regex(['pattern' => '/^\d+$/', 'groups' => [self::FORMAT_BAN]]),
+      ]);
    }
 
 }

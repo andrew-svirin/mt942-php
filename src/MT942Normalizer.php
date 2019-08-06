@@ -146,14 +146,14 @@ final class MT942Normalizer
       $result = new AccountIdentification();
       if (!empty($details[0]['bic']) && !empty($details[0]['acc_nr']))
       {
-         $result->setTypeA();
+         $result->setTypeBAN();
          $result->setBIC($details[0]['bic']);
          $result->setAccNr($details[0]['acc_nr']);
       }
       else
       {
          preg_match_all('/(?<country_code>[0-9A-Z]{2})(?<control_code>[0-9A-Z]{2})(?<bban>[0-9A-Z]*)/s', $str, $details, PREG_SET_ORDER);
-         $result->setTypeB();
+         $result->setTypeIBAN();
          $result->setIBANCountryCode($details[0]['country_code']);
          $result->setIBANControlCode($details[0]['control_code']);
          $result->setIBANBBAN($details[0]['bban']);

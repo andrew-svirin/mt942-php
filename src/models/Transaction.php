@@ -234,7 +234,7 @@ class Transaction
          ->addPropertyConstraints('trnRefNr', [
             new NotBlank(),
             new Length(['max' => 16]),
-            new Regex(['pattern' => '/\w/']),
+            new Regex(['pattern' => '/^\w+$/']),
          ]);
       // Must have a accountIdentification.
       $metadata->addPropertyConstraint('accountIdentification', new NotBlank());
