@@ -45,9 +45,9 @@ final class MT942Normalizer
     */
    private $delimiter;
 
-   public function __construct($delimiter = null)
+   public function __construct(string $delimiter = null)
    {
-      $this->delimiter = null !== $delimiter ? (string)$delimiter : self::DEFAULT_DELIMITER;
+      $this->delimiter = $delimiter ?? self::DEFAULT_DELIMITER;
    }
 
    /**
@@ -95,7 +95,7 @@ final class MT942Normalizer
                $transaction->setAccountIdentification($this->normalizeAccountIdentification($transactionDetail['message']));
                break;
             case self::TRANSACTION_CODE_STATEMENT_NR:
-               $transaction->setStatementNr($this->normalizeStatementNr($transactionDetail['message']));
+               $transaction->setStatementNumber($this->normalizeStatementNumber($transactionDetail['message']));
                break;
             case self::TRANSACTION_CODE_FLOOR_LIMIT_INDICATOR:
                // If floor limit indicator occur second time, then this is credit type.
@@ -166,12 +166,12 @@ final class MT942Normalizer
     * @param string $str Encoded entity.
     * @return StatementNumber
     */
-   private function normalizeStatementNr(string $str): StatementNumber
+   private function normalizeStatementNumber(string $str): StatementNumber
    {
-      preg_match_all('/(?<statement_nr>[0-9A-Z]*)\/(?<sequence_nr>[0-9A-Z]*)/s', $str, $details, PREG_SET_ORDER);
+      preg_match_all('/(?<statement_nr>[0-9A-Z]{5})(\/?(?<sequence_nr>[0-9A-Z]{5})?)/s', $str, $details, PREG_SET_ORDER);
       $result = new StatementNumber();
       $result->setStatementNr($details[0]['statement_nr']);
-      $result->setSequenceNr($details[0]['sequence_nr']);
+      $result->setSequenceNr($details[0]['sequence_nr'] ?? null);
       return $result;
    }
 
@@ -184,7 +184,7 @@ final class MT942Normalizer
    {
       preg_match_all('/(?<currency>[A-Z]{3})(?<dc_mark>[A-Z]{0,1})(?<amount>[0-9,]*)/s', $str, $details, PREG_SET_ORDER);
       $result = new FloorLimitIndicator();
-      $result->setDCMark(!empty($details[0]['dc_mark']) ? $details[0]['dc_mark'] : null);
+      $result->setDCMark($details[0]['dc_mark'] ?? null);
       $money = $result->getMoney();
       $money->setCurrency($details[0]['currency']);
       $money->setAmount((float)$details[0]['amount']);
@@ -212,7 +212,7 @@ final class MT942Normalizer
       preg_match_all('/(?<value_date>[0-9]{6})(?<entry_date>[0-9]{0,4})(?<dc_mark>[A-Z]{1,2})(?<amount>[0-9,]{1,15})(?<transaction_type_id_code>[A-Z0-9]{4})(?<customer_ref>.{1,16})/s', $str, $details, PREG_SET_ORDER);
       $result = new StatementLine();
       $result->setValueDate(DateTime::createFromFormat('ymd', $details[0]['value_date']));
-      $result->setEntryDate(!empty($details[0]['entry_date']) ? $details[0]['entry_date'] : null);
+      $result->setEntryDate($details[0]['entry_date'] ?? null);
       $result->setDcMark($details[0]['dc_mark']);
       $result->setAmount((float)$details[0]['amount']);
       $result->setTransactionTypeIdCode($details[0]['transaction_type_id_code']);

@@ -50,9 +50,12 @@ class MT942Validator
          $validator = $this->getValidator();
       }
       $result = $validator->validate($transaction);
+      // Validate accountIdentification.
       $result->addAll($validator->validate($transaction->getAccountIdentification(), null, [
          'AccountIdentification', $transaction->getAccountIdentification()->getFormat(),
       ]));
+      // Validate statementNumber.
+      $result->addAll($validator->validate($transaction->getStatementNumber()));
       return $result;
    }
 
