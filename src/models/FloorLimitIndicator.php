@@ -2,13 +2,18 @@
 
 namespace AndrewSvirin\MT942\models;
 
+use AndrewSvirin\MT942\contracts\MarkInterface;
+use Symfony\Component\Validator\Constraints\Choice;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Mapping\ClassMetadata;
+
 /**
  * Floor Limit Indicator specifies the payment information.
  *
  * @license http://www.opensource.org/licenses/mit-license.html  MIT License
  * @author Andrew Svirin
  */
-class FloorLimitIndicator
+class FloorLimitIndicator implements MarkInterface
 {
 
    /**
@@ -16,7 +21,7 @@ class FloorLimitIndicator
     *
     * @var string [D|C]
     */
-   private $dcMark;
+   private $mark;
 
    /**
     * @var Money
@@ -31,17 +36,17 @@ class FloorLimitIndicator
    /**
     * @return null|string
     */
-   public function getDCMark()
+   public function getMark()
    {
-      return $this->dcMark;
+      return $this->mark;
    }
 
    /**
     * @param string $value
     */
-   public function setDCMark(string $value = null)
+   public function setMark(string $value = null)
    {
-      $this->dcMark = $value;
+      $this->mark = $value;
    }
 
    /**
@@ -50,6 +55,23 @@ class FloorLimitIndicator
    public function getMoney(): Money
    {
       return $this->money;
+   }
+
+   /**
+    * Validation rules.
+    * @param ClassMetadata $metadata
+    * @see MT942Validator::getValidator()
+    */
+   public static function loadValidatorMetadata(ClassMetadata $metadata)
+   {
+      // Can have a mark. From the listed options.
+      $metadata->addPropertyConstraints('mark', [
+         new Choice([self::MARK_DEBIT, self::MARK_CREDIT]),
+      ]);
+      // Must have a money.
+      $metadata->addPropertyConstraints('money', [
+         new NotBlank(),
+      ]);
    }
 
 }

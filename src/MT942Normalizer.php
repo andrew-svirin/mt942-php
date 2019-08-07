@@ -18,45 +18,8 @@ use DateTime;
  * @license http://www.opensource.org/licenses/mit-license.html  MIT License
  * @author Andrew Svirin
  */
-final class MT942Normalizer
+final class MT942Normalizer extends MT942Formatter
 {
-
-   /**
-    * Transaction codes.
-    */
-   const TRANSACTION_CODE_TRN_REF_NR = '20';
-   const TRANSACTION_CODE_ACCOUNT_ID = '25';
-   const TRANSACTION_CODE_STATEMENT_NR = '28C';
-   const TRANSACTION_CODE_FLOOR_LIMIT_INDICATOR = '34F';
-   const TRANSACTION_CODE_DATETIME_INDICATOR = '13';
-   const TRANSACTION_CODE_STATEMENT_LINE = '61';
-   const TRANSACTION_CODE_STATEMENT_INFORMATION = '86';
-   const TRANSACTION_CODE_SUMMARY_DEBIT = '90D';
-   const TRANSACTION_CODE_SUMMARY_CREDIT = '90C';
-
-   /**
-    * Default delimiter.
-    */
-   const DEFAULT_DELIMITER = "\r\n-\r\n";
-
-   /**
-    * Delimiter that slice string on transactions pieces.
-    * @var string
-    */
-   private $delimiter;
-
-   public function __construct(string $delimiter = null)
-   {
-      $this->delimiter = $delimiter ?? self::DEFAULT_DELIMITER;
-   }
-
-   /**
-    * @param string $delimiter
-    */
-   public function setDelimiter($delimiter)
-   {
-      $this->delimiter = $delimiter;
-   }
 
    /**
     * Normalize string with list of Transactions from string.
@@ -171,7 +134,7 @@ final class MT942Normalizer
       preg_match_all('/(?<statement_nr>[0-9A-Z]{5})(\/?(?<sequence_nr>[0-9A-Z]{5})?)/s', $str, $details, PREG_SET_ORDER);
       $result = new StatementNumber();
       $result->setStatementNr($details[0]['statement_nr']);
-      $result->setSequenceNr($details[0]['sequence_nr'] ?? null);
+      $result->setSequenceNr(!empty($details[0]['sequence_nr']) ? $details[0]['sequence_nr'] : null);
       return $result;
    }
 
@@ -182,9 +145,9 @@ final class MT942Normalizer
     */
    private function normalizeFloorLimitIndicator(string $str): FloorLimitIndicator
    {
-      preg_match_all('/(?<currency>[A-Z]{3})(?<dc_mark>[A-Z]{0,1})(?<amount>[0-9,]*)/s', $str, $details, PREG_SET_ORDER);
+      preg_match_all('/(?<currency>[A-Z]{3})(?<mark>[A-Z]{0,1})(?<amount>[0-9,]*)/s', $str, $details, PREG_SET_ORDER);
       $result = new FloorLimitIndicator();
-      $result->setDCMark($details[0]['dc_mark'] ?? null);
+      $result->setMark(!empty($details[0]['mark']) ? $details[0]['mark'] : null);
       $money = $result->getMoney();
       $money->setCurrency($details[0]['currency']);
       $money->setAmount((float)$details[0]['amount']);
@@ -212,8 +175,8 @@ final class MT942Normalizer
       preg_match_all('/(?<value_date>[0-9]{6})(?<entry_date>[0-9]{0,4})(?<dc_mark>[A-Z]{1,2})(?<amount>[0-9,]{1,15})(?<transaction_type_id_code>[A-Z0-9]{4})(?<customer_ref>.{1,16})/s', $str, $details, PREG_SET_ORDER);
       $result = new StatementLine();
       $result->setValueDate(DateTime::createFromFormat('ymd', $details[0]['value_date']));
-      $result->setEntryDate($details[0]['entry_date'] ?? null);
-      $result->setDcMark($details[0]['dc_mark']);
+      $result->setEntryDate(!empty($details[0]['entry_date']) ? $details[0]['entry_date'] : null);
+      $result->setMark($details[0]['dc_mark']);
       $result->setAmount((float)$details[0]['amount']);
       $result->setTransactionTypeIdCode($details[0]['transaction_type_id_code']);
       $result->setCustomerRef($details[0]['customer_ref']);

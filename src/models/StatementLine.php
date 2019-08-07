@@ -2,6 +2,7 @@
 
 namespace AndrewSvirin\MT942\models;
 
+use AndrewSvirin\MT942\contracts\MarkInterface;
 use DateTime;
 
 /**
@@ -10,7 +11,7 @@ use DateTime;
  * @license http://www.opensource.org/licenses/mit-license.html  MIT License
  * @author Andrew Svirin
  */
-class StatementLine
+class StatementLine implements MarkInterface
 {
 
    /**
@@ -26,7 +27,7 @@ class StatementLine
    /**
     * @var string
     */
-   private $dcMark;
+   private $mark;
 
    /**
     * @var string
@@ -83,17 +84,17 @@ class StatementLine
    /**
     * @return string
     */
-   public function getDcMark(): string
+   public function getMark(): string
    {
-      return $this->dcMark;
+      return $this->mark;
    }
 
    /**
-    * @param string $dcMark
+    * @param string $mark
     */
-   public function setDcMark(string $dcMark)
+   public function setMark(string $mark)
    {
-      $this->dcMark = $dcMark;
+      $this->mark = $mark;
    }
 
    /**
