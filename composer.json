@@ -14,7 +14,7 @@
       "name": "Andrew Svirin"
     }
   ],
-    "version": "dev",
+  "version": "dev",
   "minimum-stability": "dev",
   "autoload": {
     "psr-4": {

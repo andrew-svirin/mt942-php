@@ -2,6 +2,11 @@
 
 namespace AndrewSvirin\MT942\models;
 
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
+use Symfony\Component\Validator\Mapping\ClassMetadata;
+
 /**
  * Statement Number specifies transaction operation numeration.
  *
@@ -45,7 +50,7 @@ class StatementNumber
    }
 
    /**
-    * @return mixed
+    * @return int
     */
    public function getSequenceNr()
    {
@@ -53,11 +58,32 @@ class StatementNumber
    }
 
    /**
-    * @param mixed $value
+    * @param int $value
     */
    public function setSequenceNr($value)
    {
       $this->sequenceNr = $value;
+   }
+
+   /**
+    * Validation rules.
+    * @param ClassMetadata $metadata
+    * @see MT942Validator::getValidator()
+    */
+   public static function loadValidatorMetadata(ClassMetadata $metadata)
+   {
+      // Must have a statementNr with specified length and pattern.
+      $metadata->addPropertyConstraints('statementNr', [
+         new NotBlank(),
+         new Length(['min' => 5, 'max' => 5]),
+         new Regex(['pattern' => '/^\d+$/']),
+      ]);
+
+      // Can have a sequenceNr with specified length and pattern.
+      $metadata->addPropertyConstraints('statementNr', [
+         new Length(['min' => 5, 'max' => 5]),
+         new Regex(['pattern' => '/^\d+$/']),
+      ]);
    }
 
 }

@@ -37,7 +37,7 @@ class Transaction
     * the message within that statement when more than one message is sent for one statement.
     * @var StatementNumber
     */
-   private $statementNr;
+   private $statementNumber;
 
    /**
     * Floor Limit Indicator.
@@ -113,17 +113,17 @@ class Transaction
    /**
     * @return StatementNumber
     */
-   public function getStatementNr(): StatementNumber
+   public function getStatementNumber(): StatementNumber
    {
-      return $this->statementNr;
+      return $this->statementNumber;
    }
 
    /**
     * @param StatementNumber $value
     */
-   public function setStatementNr(StatementNumber $value)
+   public function setStatementNumber(StatementNumber $value)
    {
-      $this->statementNr = $value;
+      $this->statementNumber = $value;
    }
 
    /**
@@ -238,8 +238,8 @@ class Transaction
          ]);
       // Must have a accountIdentification.
       $metadata->addPropertyConstraint('accountIdentification', new NotBlank());
-      // Must have a statementNr.
-      $metadata->addPropertyConstraint('statementNr', new NotBlank());
+      // Must have a statementNumber.
+      $metadata->addPropertyConstraint('statementNumber', new NotBlank());
       // Must have a floorLimitIndicator.
       $metadata->addPropertyConstraint('floorLimitIndicator', new NotBlank());
       // Must have a datetimeIndicator.
