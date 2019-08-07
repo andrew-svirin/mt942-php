@@ -56,6 +56,8 @@ class MT942Validator
       ]));
       // Validate statementNumber.
       $result->addAll($validator->validate($transaction->getStatementNumber()));
+      // Validate floorLimitIndicator.
+      $result->addAll($validator->validate($transaction->getFloorLimitIndicator()));
       return $result;
    }
 
