@@ -2,6 +2,12 @@
 
 namespace AndrewSvirin\MT942\models;
 
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Type;
+use Symfony\Component\Validator\Constraints\Valid;
+use Symfony\Component\Validator\Mapping\ClassMetadata;
+
 /**
  * Summary for transaction operations.
  *
@@ -30,17 +36,17 @@ class Summary
    }
 
    /**
-    * @return int
+    * @return null|int
     */
-   public function getEntriesNr(): int
+   public function getEntriesNr()
    {
       return $this->entriesNr;
    }
 
    /**
-    * @param int $value
+    * @param int|null $value
     */
-   public function setEntriesNr(int $value)
+   public function setEntriesNr(int $value = null)
    {
       $this->entriesNr = $value;
    }
@@ -59,6 +65,26 @@ class Summary
    public function setMoney(Money $value)
    {
       $this->money = $value;
+   }
+
+   /**
+    * Validation rules.
+    * @param ClassMetadata $metadata
+    * @see MT942Validator::getValidator()
+    */
+   public static function loadValidatorMetadata(ClassMetadata $metadata)
+   {
+      // Can have a entriesNr. With max length and passed pattern.
+      $metadata->addPropertyConstraints('entriesNr', [
+         new Length(['max' => 5]),
+         new Type('int'),
+      ]);
+      // Must have a valid money.
+      $metadata->addPropertyConstraints('money', [
+         new Valid(),
+         new NotBlank(),
+         new Type('object'),
+      ]);
    }
 
 }

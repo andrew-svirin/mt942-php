@@ -6,6 +6,8 @@ use DateTime;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
+use Symfony\Component\Validator\Constraints\Type;
+use Symfony\Component\Validator\Constraints\Valid;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
 
 /**
@@ -234,15 +236,32 @@ class Transaction
          ->addPropertyConstraints('trnRefNr', [
             new NotBlank(),
             new Length(['max' => 16]),
+            new Type('string'),
             new Regex(['pattern' => '/^\w+$/']),
          ]);
-      // Must have a accountIdentification.
-      $metadata->addPropertyConstraint('accountIdentification', new NotBlank());
-      // Must have a statementNumber.
-      $metadata->addPropertyConstraint('statementNumber', new NotBlank());
-      // Must have a floorLimitIndicator.
-      $metadata->addPropertyConstraint('floorLimitIndicator', new NotBlank());
-      // Must have a datetimeIndicator.
-      $metadata->addPropertyConstraint('datetimeIndicator', new NotBlank());
+      // Must have a valid accountIdentification.
+      $metadata->addPropertyConstraints('accountIdentification', [
+         new Valid(),
+         new NotBlank(),
+         new Type('object'),
+      ]);
+      // Must have a valid statementNumber.
+      $metadata->addPropertyConstraints('statementNumber', [
+         new Valid(),
+         new NotBlank(),
+         new Type('object'),
+      ]);
+      // Must have a valid floorLimitIndicator.
+      $metadata->addPropertyConstraints('floorLimitIndicator', [
+         new Valid(),
+         new NotBlank(),
+         new Type('object'),
+      ]);
+      // Must have a valid datetimeIndicator.
+      $metadata->addPropertyConstraints('datetimeIndicator', [
+         new Valid(),
+         new NotBlank(),
+         new Type('object'),
+      ]);
    }
 }

@@ -2,6 +2,12 @@
 
 namespace AndrewSvirin\MT942\models;
 
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
+use Symfony\Component\Validator\Constraints\Type;
+use Symfony\Component\Validator\Mapping\ClassMetadata;
+
 /**
  * Money specifies currency and amount.
  *
@@ -55,6 +61,28 @@ class Money
    public function setAmount(float $value)
    {
       $this->amount = $value;
+   }
+
+   /**
+    * Validation rules.
+    * @param ClassMetadata $metadata
+    * @see MT942Validator::getValidator()
+    */
+   public static function loadValidatorMetadata(ClassMetadata $metadata)
+   {
+      // Can have a currency. With fixed length and passed pattern.
+      $metadata->addPropertyConstraints('currency', [
+         new NotBlank(),
+         new Length(['min' => 3, 'max' => 3]),
+         new Type('string'),
+         new Regex(['pattern' => '/^[A-Z]+$/']),
+      ]);
+      // Must have an amount.
+      $metadata->addPropertyConstraints('amount', [
+         new NotBlank(),
+         new Length(['max' => 15]),
+         new Type('float'),
+      ]);
    }
 
 }

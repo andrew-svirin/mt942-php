@@ -7,6 +7,7 @@ use Symfony\Component\Validator\Constraints\Choice;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
+use Symfony\Component\Validator\Constraints\Type;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
 
 /**
@@ -182,30 +183,33 @@ class AccountIdentification
       $metadata->addPropertyConstraints('ibanCountryCode', [
          new NotBlank(['groups' => [self::FORMAT_IBAN]]),
          new Length(['min' => 2, 'max' => 2]),
-         new Regex(['pattern' => '/^[A-Za-z]+$/', 'groups' => [self::FORMAT_IBAN]]),
+         new Type('string'),
+         new Regex(['pattern' => '/^[A-Za-z]+$/']),
       ]);
       // If format is IBAN, then ibanControlCode must present and has specific length and pass character mask.
       $metadata->addPropertyConstraints('ibanControlCode', [
          new NotBlank(['groups' => [self::FORMAT_IBAN]]),
          new Length(['min' => 2, 'max' => 2]),
-         new Regex(['pattern' => '/^\d+$/', 'groups' => [self::FORMAT_IBAN]]),
+         new Type(['type' => 'string']),
       ]);
       // If format is IBAN, then ibanBBAN must present and has specific length and pass character mask.
       $metadata->addPropertyConstraints('ibanBBAN', [
          new NotBlank(['groups' => [self::FORMAT_IBAN]]),
          new Length(['min' => 24, 'max' => 24]),
-         new Regex(['pattern' => '/^\d+$/', 'groups' => [self::FORMAT_IBAN]]),
+         new Type(['type' => 'string']),
       ]);
       // If format is BAN, then bic must present and has specific length and pass character mask.
       $metadata->addPropertyConstraints('bic', [
          new NotBlank(['groups' => [self::FORMAT_BAN]]),
          new Length(['min' => 8, 'max' => 8]),
-         new Regex(['pattern' => '/^\w+$/', 'groups' => [self::FORMAT_BAN]]),
+         new Type('string'),
+         new Regex(['pattern' => '/^\w+$/']),
       ]);
       // If format is BAN, then accNr must present and has specific length and pass character mask.
       $metadata->addPropertyConstraints('accNr', [
          new NotBlank(['groups' => [self::FORMAT_BAN]]),
          new Length(['max' => 12]),
+         new Type('string'),
          new Regex(['pattern' => '/^\d+$/', 'groups' => [self::FORMAT_BAN]]),
       ]);
    }
