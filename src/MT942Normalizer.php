@@ -207,9 +207,9 @@ final class MT942Normalizer extends MT942Formatter
     */
    private function normalizeSummary(string $str): Summary
    {
-      preg_match_all('/(?<entries_nr>[0-9]{1,5})(?<currency>[A-Z]{3})(?<amount>[0-9,]*)/s', $str, $details, PREG_SET_ORDER);
+      preg_match_all('/(?<entries_nr>[0-9]{0,5})(?<currency>[A-Z]{3})(?<amount>[0-9,]*)/s', $str, $details, PREG_SET_ORDER);
       $result = new Summary();
-      $result->setEntriesNr($details[0]['entries_nr']);
+      $result->setEntriesNr(!empty($details[0]['entries_nr']) ? $details[0]['entries_nr'] : null);
       $money = $result->getMoney();
       $money->setCurrency($details[0]['currency']);
       $money->setAmount((float)$details[0]['amount']);

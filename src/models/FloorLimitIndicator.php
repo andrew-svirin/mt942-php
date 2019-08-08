@@ -5,6 +5,8 @@ namespace AndrewSvirin\MT942\models;
 use AndrewSvirin\MT942\contracts\MarkInterface;
 use Symfony\Component\Validator\Constraints\Choice;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Type;
+use Symfony\Component\Validator\Constraints\Valid;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
 
 /**
@@ -68,9 +70,11 @@ class FloorLimitIndicator implements MarkInterface
       $metadata->addPropertyConstraints('mark', [
          new Choice([self::MARK_DEBIT, self::MARK_CREDIT]),
       ]);
-      // Must have a money.
+      // Must have a valid money.
       $metadata->addPropertyConstraints('money', [
+         new Valid(),
          new NotBlank(),
+         new Type('object'),
       ]);
    }
 
