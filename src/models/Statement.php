@@ -2,6 +2,11 @@
 
 namespace AndrewSvirin\MT942\models;
 
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Type;
+use Symfony\Component\Validator\Constraints\Valid;
+use Symfony\Component\Validator\Mapping\ClassMetadata;
+
 /**
  * Statement specifies information about Transaction operation.
  *
@@ -51,6 +56,27 @@ class Statement
    public function setInformation(StatementInformation $value)
    {
       $this->information = $value;
+   }
+
+   /**
+    * Validation rules.
+    * @param ClassMetadata $metadata
+    * @see MT942Validator::getValidator()
+    */
+   public static function loadValidatorMetadata(ClassMetadata $metadata)
+   {
+      // Must have a valid line.
+      $metadata->addPropertyConstraints('line', [
+         new Valid(),
+         new NotBlank(),
+         new Type('object'),
+      ]);
+      // Must have a valid information.
+      $metadata->addPropertyConstraints('information', [
+         new Valid(),
+         new NotBlank(),
+         new Type('object'),
+      ]);
    }
 
 }

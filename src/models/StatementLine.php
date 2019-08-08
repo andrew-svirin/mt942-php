@@ -4,6 +4,11 @@ namespace AndrewSvirin\MT942\models;
 
 use AndrewSvirin\MT942\contracts\MarkInterface;
 use DateTime;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
+use Symfony\Component\Validator\Constraints\Type;
+use Symfony\Component\Validator\Mapping\ClassMetadata;
 
 /**
  * Statement Line specifies main information for Statement.
@@ -66,9 +71,9 @@ class StatementLine implements MarkInterface
    }
 
    /**
-    * @return string
+    * @return null|string
     */
-   public function getEntryDate(): string
+   public function getEntryDate()
    {
       return $this->entryDate;
    }
@@ -159,6 +164,27 @@ class StatementLine implements MarkInterface
    public function setCustomerRef(string $customerRef)
    {
       $this->customerRef = $customerRef;
+   }
+
+   /**
+    * Validation rules.
+    * @param ClassMetadata $metadata
+    * @see MT942Validator::getValidator()
+    */
+   public static function loadValidatorMetadata(ClassMetadata $metadata)
+   {
+      // Must have a valueDate. With specified type.
+      $metadata->addPropertyConstraints('valueDate', [
+         new NotBlank(),
+         new Type('object'),
+      ]);
+      // Can have a valueDate. With specified type.
+      $metadata->addPropertyConstraints('entryDate', [
+         new Length(['min' => 4, 'max' => 4]),
+         new Type('string'),
+         new Regex(['pattern' => '/^\w+$/']),
+      ]);
+
    }
 
 }
