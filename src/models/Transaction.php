@@ -3,6 +3,7 @@
 namespace AndrewSvirin\MT942\models;
 
 use DateTime;
+use Symfony\Component\Validator\Constraints\All;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
@@ -261,6 +262,23 @@ class Transaction
       $metadata->addPropertyConstraints('datetimeIndicator', [
          new Valid(),
          new NotBlank(),
+         new Type('object'),
+      ]);
+      // Must have a valid statements.
+      $metadata->addPropertyConstraints('statements', [
+         new Valid(),
+         new All([
+            new Type('object'),
+         ]),
+      ]);
+      // Can have a valid summaryDebit.
+      $metadata->addPropertyConstraints('summaryDebit', [
+         new Valid(),
+         new Type('object'),
+      ]);
+      // Can have a valid summaryCredit.
+      $metadata->addPropertyConstraints('summaryCredit', [
+         new Valid(),
          new Type('object'),
       ]);
    }
