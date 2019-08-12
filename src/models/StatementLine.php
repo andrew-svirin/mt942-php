@@ -4,6 +4,7 @@ namespace AndrewSvirin\MT942\models;
 
 use AndrewSvirin\MT942\contracts\MarkInterface;
 use DateTime;
+use Symfony\Component\Validator\Constraints\Choice;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
@@ -33,11 +34,6 @@ class StatementLine implements MarkInterface
     * @var string
     */
    private $mark;
-
-   /**
-    * @var string
-    */
-   private $fundsCode;
 
    /**
     * @var float
@@ -103,22 +99,6 @@ class StatementLine implements MarkInterface
    }
 
    /**
-    * @return string
-    */
-   public function getFundsCode(): string
-   {
-      return $this->fundsCode;
-   }
-
-   /**
-    * @param string $fundsCode
-    */
-   public function setFundsCode(string $fundsCode)
-   {
-      $this->fundsCode = $fundsCode;
-   }
-
-   /**
     * @return float
     */
    public function getAmount(): float
@@ -178,13 +158,36 @@ class StatementLine implements MarkInterface
          new NotBlank(),
          new Type('object'),
       ]);
-      // Can have a valueDate. With specified type.
+      // Can have a entryDate. With specified type.
       $metadata->addPropertyConstraints('entryDate', [
          new Length(['min' => 4, 'max' => 4]),
          new Type('string'),
          new Regex(['pattern' => '/^\w+$/']),
       ]);
-
+      // Must have a mark. From the listed options.
+      $metadata->addPropertyConstraints('mark', [
+         new Choice([self::MARK_DEBIT, self::MARK_CREDIT]),
+      ]);
+      // Must have an amount. From the listed options.
+      $metadata->addPropertyConstraints('amount', [
+         new NotBlank(),
+         new Length(['max' => 15]),
+         new Type('float'),
+      ]);
+      // Must have an transactionTypeIdCode. With fixed length.
+      $metadata->addPropertyConstraints('transactionTypeIdCode', [
+         new NotBlank(),
+         new Length(['min' => 4, 'max' => 4]),
+         new Regex(['pattern' => '/^[A-Z0-9]+$/']),
+         new Type('string'),
+      ]);
+      // Must have an customerRef. With max length.
+      $metadata->addPropertyConstraints('customerRef', [
+         new NotBlank(),
+         new Length(['max' => 16]),
+         new Regex(['pattern' => '/^[A-Za-z0-9]+$/']),
+         new Type('string'),
+      ]);
    }
 
 }

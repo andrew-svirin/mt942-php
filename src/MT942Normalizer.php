@@ -172,7 +172,7 @@ final class MT942Normalizer extends MT942Formatter
     */
    private function normalizeStatementLine(string $str): StatementLine
    {
-      preg_match_all('/(?<value_date>[0-9]{6})(?<entry_date>[0-9]{0,4})(?<mark>[A-Z]{1})(?<amount>[0-9,]{1,15})(?<transaction_type_id_code>[A-Z0-9]{4})(?<customer_ref>.{1,16})/s', $str, $details, PREG_SET_ORDER);
+      preg_match_all('/(?<value_date>[0-9]{6})(?<entry_date>[0-9]{0,4})(?<mark>[A-Z]{1})(?<amount>[0-9,]{1,15})(?<transaction_type_id_code>[A-Z0-9]{4})(?<customer_ref>[a-zA-Z0-9]{1,16})/s', $str, $details, PREG_SET_ORDER);
       $result = new StatementLine();
       $result->setValueDate(DateTime::createFromFormat('ymd', $details[0]['value_date']));
       $result->setEntryDate(!empty($details[0]['entry_date']) ? $details[0]['entry_date'] : null);
@@ -190,7 +190,7 @@ final class MT942Normalizer extends MT942Formatter
     */
    private function normalizeStatementInformation(string $str): StatementInformation
    {
-      preg_match_all('/(?<id_code>[^?]*)(\?(?<nr>\d\d)(?<line>[^\?]*))/s', $str, $details, PREG_SET_ORDER);
+      preg_match_all('/(?<id_code>[^?]{3})(\?(?<nr>\d\d)(?<line>[^\?]*))/s', $str, $details, PREG_SET_ORDER);
       $result = new StatementInformation();
       $result->setIdCode($details[0]['id_code']);
       foreach ($details as $detail)
