@@ -2,6 +2,12 @@
 
 namespace AndrewSvirin\MT942\models;
 
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
+use Symfony\Component\Validator\Constraints\Type;
+use Symfony\Component\Validator\Mapping\ClassMetadata;
+
 /**
  * Statement information specifies multiple additional options for Statement for account owner purpose.
  *
@@ -227,6 +233,23 @@ class StatementInformation
    public function getLine38()
    {
       return $this->lines[self::LINE_38] ?? null;
+   }
+
+   /**
+    * Validation rules.
+    * @param ClassMetadata $metadata
+    * @see MT942Validator::getValidator()
+    */
+   public static function loadValidatorMetadata(ClassMetadata $metadata)
+   {
+      // Must have an idCode. With specified type.
+      $metadata->addPropertyConstraints('idCode', [
+         new NotBlank(),
+         new Type('string'),
+         new Length(['min' => 3, 'max' => 3]),
+         new Regex(['pattern' => '/^[a-zA-Z0-9]+$/']),
+         new Type('string'),
+      ]);
    }
 
 }
