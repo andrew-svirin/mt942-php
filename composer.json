@@ -7,15 +7,16 @@
     "swift",
     "PHP",
     "parser",
-    "converter"
+    "converter",
+    "normalizer",
+    "validator"
   ],
   "authors": [
     {
       "name": "Andrew Svirin"
     }
   ],
-  "version": "dev",
-  "minimum-stability": "dev",
+  "version": "1.0.0",
   "autoload": {
     "psr-4": {
       "AndrewSvirin\\MT942\\": "src"
