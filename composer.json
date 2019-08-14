@@ -1,13 +1,12 @@
 {
   "name": "andrew-svirin/mt942-php",
+  "version": "1.0.0",
   "type": "library",
   "description": "PHP library for parse MT942 Swift format.",
   "keywords": [
     "mt942",
     "swift",
     "PHP",
-    "parser",
-    "converter",
     "normalizer",
     "validator"
   ],
@@ -16,7 +15,7 @@
       "name": "Andrew Svirin"
     }
   ],
-  "version": "1.0.0",
+  "license": "MIT",
   "autoload": {
     "psr-4": {
       "AndrewSvirin\\MT942\\": "src"
