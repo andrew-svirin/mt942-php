@@ -29,4 +29,4 @@ Validate:
 ```
 
 ### Statistic
-[![Build Status](https://travis-ci.com/andrew-svirin/mt942-php.svg?branch=master)](https://travis-ci.com/andrew-svirin/mt942-php)
+[![Build Status](https://travis-ci.org/andrew-svirin/mt942-php.svg?branch=master)](https://travis-ci.com/andrew-svirin/mt942-php)
