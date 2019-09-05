@@ -5,11 +5,11 @@ More details about MT942 format you can find in Internet.
 
 ### Installation
 ```bash
-$ composer require andrew-swirin/mt942-php
+$ composer require andrew-svirin/mt942-php
 ```
 
 ### License
-andrew-swirin/mt942-php is licensed under the MIT License, see the LICENSE file for details
+andrew-svirin/mt942-php is licensed under the MIT License, see the LICENSE file for details
 
 ### Example
 Include
