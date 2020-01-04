@@ -1,6 +1,5 @@
 {
   "name": "andrew-svirin/mt942-php",
-  "version": "1.0.1",
   "type": "library",
   "description": "PHP library for parse MT942 Swift format.",
   "keywords": [
