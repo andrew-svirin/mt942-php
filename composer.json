@@ -1,6 +1,6 @@
 {
   "name": "andrew-svirin/mt942-php",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "library",
   "description": "PHP library for parse MT942 Swift format.",
   "keywords": [
@@ -23,7 +23,7 @@
   },
   "require": {
     "php": "^7.0",
-    "symfony/validator": "^3.4"
+    "symfony/validator": "^3.4|^4.0|^5.0"
   },
   "require-dev": {
     "phpunit/phpunit": "^6.5"
