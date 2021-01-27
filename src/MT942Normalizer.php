@@ -131,7 +131,7 @@ final class MT942Normalizer extends MT942Formatter
     */
    private function normalizeStatementNumber(string $str): StatementNumber
    {
-      preg_match_all('/(?<statement_nr>[0-9A-Z]{5})(\/?(?<sequence_nr>[0-9A-Z]{5})?)/s', $str, $details, PREG_SET_ORDER);
+      preg_match_all('/(?<statement_nr>[0-9A-Z]{1,5})(\/?(?<sequence_nr>[0-9A-Z]{1,5})?)/s', $str, $details, PREG_SET_ORDER);
       $result = new StatementNumber();
       $result->setStatementNr($details[0]['statement_nr']);
       $result->setSequenceNr(!empty($details[0]['sequence_nr']) ? $details[0]['sequence_nr'] : null);
