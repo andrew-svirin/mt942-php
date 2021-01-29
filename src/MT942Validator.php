@@ -17,57 +17,58 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class MT942Validator
 {
 
-   /**
-    * Validate list of Transactions model by constraints.
-    * @param TransactionList $transactionList Models for validation.
-    * @param ValidatorInterface|null $validator Extendable validator. By default uses default validator.
-    * @return ConstraintViolationList
-    */
-   public function validateList(TransactionList $transactionList, ValidatorInterface $validator = null)
-   {
-      if (null === $validator)
-      {
-         $validator = $this->getValidator();
-      }
-      $result = new ConstraintViolationList();
-      foreach ($transactionList->getIterator() as $transaction)
-      {
-         $result->addAll($this->validate($transaction, $validator));
-      }
-      return $result;
-   }
+    /**
+     * Validate list of Transactions model by constraints.
+     *
+     * @param TransactionList $transactionList Models for validation.
+     * @param ValidatorInterface|null $validator Extendable validator. By default uses default validator.
+     *
+     * @return ConstraintViolationList
+     */
+    public function validateList(TransactionList $transactionList, ValidatorInterface $validator = null)
+    {
+        if (null === $validator) {
+            $validator = $this->getValidator();
+        }
+        $result = new ConstraintViolationList();
+        foreach ($transactionList->getIterator() as $transaction) {
+            $result->addAll($this->validate($transaction, $validator));
+        }
+        return $result;
+    }
 
-   /**
-    * Validate Transaction model by constraints.
-    * @param Transaction $transaction Model for validation.
-    * @param ValidatorInterface $validator Extendable validator. By default uses default validator.
-    * @return ConstraintViolationListInterface
-    */
-   public function validate(Transaction $transaction, ValidatorInterface $validator = null)
-   {
-      if (null === $validator)
-      {
-         $validator = $this->getValidator();
-      }
-      $result = $validator->validate($transaction);
-      return $result;
-   }
+    /**
+     * Validate Transaction model by constraints.
+     *
+     * @param Transaction $transaction Model for validation.
+     * @param ValidatorInterface $validator Extendable validator. By default uses default validator.
+     *
+     * @return ConstraintViolationListInterface
+     */
+    public function validate(Transaction $transaction, ValidatorInterface $validator = null)
+    {
+        if (null === $validator) {
+            $validator = $this->getValidator();
+        }
+        $result = $validator->validate($transaction);
+        return $result;
+    }
 
-   /**
-    * Get default Validator.
-    * @param array|null $validationMethods Can be extended by additional validation methods.
-    * @return ValidatorInterface
-    */
-   public function getValidator(array $validationMethods = null)
-   {
-      if (null === $validationMethods)
-      {
-         $validationMethods = ['loadValidatorMetadata'];
-      }
-      $result = Validation::createValidatorBuilder()
-         ->addMethodMappings($validationMethods)
-         ->getValidator();
-      return $result;
-   }
-
+    /**
+     * Get default Validator.
+     *
+     * @param array|null $validationMethods Can be extended by additional validation methods.
+     *
+     * @return ValidatorInterface
+     */
+    public function getValidator(array $validationMethods = null)
+    {
+        if (null === $validationMethods) {
+            $validationMethods = ['loadValidatorMetadata'];
+        }
+        $result = Validation::createValidatorBuilder()
+            ->addMethodMappings($validationMethods)
+            ->getValidator();
+        return $result;
+    }
 }

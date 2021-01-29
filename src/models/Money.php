@@ -17,72 +17,73 @@ use Symfony\Component\Validator\Mapping\ClassMetadata;
 class Money
 {
 
-   /**
-    * Currency ISO code.
-    *
-    * @var string
-    */
-   private $currency;
+    /**
+     * Currency ISO code.
+     *
+     * @var string
+     */
+    private $currency;
 
-   /**
-    * Amount.
-    *
-    * @var float
-    */
-   private $amount;
+    /**
+     * Amount.
+     *
+     * @var float
+     */
+    private $amount;
 
-   /**
-    * @return string
-    */
-   public function getCurrency(): string
-   {
-      return $this->currency;
-   }
+    /**
+     * @return string
+     */
+    public function getCurrency(): string
+    {
+        return $this->currency;
+    }
 
-   /**
-    * @param string $value
-    */
-   public function setCurrency(string $value)
-   {
-      $this->currency = $value;
-   }
+    /**
+     * @param string $value
+     */
+    public function setCurrency(string $value): void
+    {
+        $this->currency = $value;
+    }
 
-   /**
-    * @return float
-    */
-   public function getAmount(): float
-   {
-      return $this->amount;
-   }
+    /**
+     * @return float
+     */
+    public function getAmount(): float
+    {
+        return $this->amount;
+    }
 
-   /**
-    * @param float $value
-    */
-   public function setAmount(float $value)
-   {
-      $this->amount = $value;
-   }
+    /**
+     * @param float $value
+     */
+    public function setAmount(float $value): void
+    {
+        $this->amount = $value;
+    }
 
-   /**
-    * Validation rules.
-    * @param ClassMetadata $metadata
-    * @see MT942Validator::getValidator()
-    */
-   public static function loadValidatorMetadata(ClassMetadata $metadata)
-   {
-      // Can have a currency. With fixed length and passed pattern.
-      $metadata->addPropertyConstraints('currency', [
-         new NotBlank(),
-         new Length(['min' => 3, 'max' => 3]),
-         new Type('string'),
-         new Regex(['pattern' => '/^[A-Z]+$/']),
-      ]);
-      // Must have an amount.
-      $metadata->addPropertyConstraints('amount', [
-         new NotBlank(),
-         new Length(['max' => 15]),
-         new Type('float'),
-      ]);
-   }
-
+    /**
+     * Validation rules.
+     *
+     * @param ClassMetadata $metadata
+     *
+     * @see MT942Validator::getValidator()
+     */
+    public static function loadValidatorMetadata(ClassMetadata $metadata): void
+    {
+        // Can have a currency. With fixed length and passed pattern.
+        $metadata->addPropertyConstraints('currency', [
+            new NotBlank(),
+            new Length(['min' => 3, 'max' => 3]),
+            new Type('string'),
+            new Regex(['pattern' => '/^[A-Z]+$/']),
+        ]);
+        // Must have an amount.
+        $metadata->addPropertyConstraints('amount', [
+            new NotBlank(),
+            new Length(['max' => 15]),
+            new Type('float'),
+        ]);
+    }
 }

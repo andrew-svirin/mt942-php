@@ -8,3 +8,5 @@ vendor
 # Test data.
 Tests data
 tests/_data/data
+
+.phpunit.result.cache

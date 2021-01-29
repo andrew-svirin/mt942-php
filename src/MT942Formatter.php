@@ -13,22 +13,22 @@ use AndrewSvirin\MT942\contracts\MT942FormatterInterface;
 abstract class MT942Formatter implements MT942FormatterInterface
 {
 
-   /**
-    * Delimiter that slice string on transactions pieces.
-    * @var string
-    */
-   protected $delimiter;
+    /**
+     * Delimiter that slice string on transactions pieces.
+     * @var string
+     */
+    protected $delimiter;
 
-   public function __construct(string $delimiter = null)
-   {
-      $this->delimiter = $delimiter ?? self::DEFAULT_DELIMITER;
-   }
+    public function __construct(string $delimiter = null)
+    {
+        $this->delimiter = $delimiter ?? self::DEFAULT_DELIMITER;
+    }
 
-   /**
-    * @param string $delimiter
-    */
-   public function setDelimiter(string $delimiter)
-   {
-      $this->delimiter = $delimiter;
-   }
+    /**
+     * @param string $delimiter
+     */
+    public function setDelimiter(string $delimiter): void
+    {
+        $this->delimiter = $delimiter;
+    }
 }

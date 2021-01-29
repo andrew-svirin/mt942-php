@@ -18,64 +18,65 @@ use Symfony\Component\Validator\Mapping\ClassMetadata;
 class FloorLimitIndicator implements MarkInterface
 {
 
-   /**
-    * Debit or Credit mark.
-    *
-    * @var string [D|C]
-    */
-   private $mark;
+    /**
+     * Debit or Credit mark.
+     *
+     * @var string|null [D|C]
+     */
+    private $mark;
 
-   /**
-    * @var Money
-    */
-   private $money;
+    /**
+     * @var Money
+     */
+    private $money;
 
-   public function __construct()
-   {
-      $this->money = new Money();
-   }
+    public function __construct()
+    {
+        $this->money = new Money();
+    }
 
-   /**
-    * @return null|string
-    */
-   public function getMark()
-   {
-      return $this->mark;
-   }
+    /**
+     * @return null|string
+     */
+    public function getMark()
+    {
+        return $this->mark;
+    }
 
-   /**
-    * @param string $value
-    */
-   public function setMark(string $value = null)
-   {
-      $this->mark = $value;
-   }
+    /**
+     * @param string|null $value
+     */
+    public function setMark(string $value = null): void
+    {
+        $this->mark = $value;
+    }
 
-   /**
-    * @return Money
-    */
-   public function getMoney(): Money
-   {
-      return $this->money;
-   }
+    /**
+     * @return Money
+     */
+    public function getMoney(): Money
+    {
+        return $this->money;
+    }
 
-   /**
-    * Validation rules.
-    * @param ClassMetadata $metadata
-    * @see MT942Validator::getValidator()
-    */
-   public static function loadValidatorMetadata(ClassMetadata $metadata)
-   {
-      // Can have a mark. From the listed options.
-      $metadata->addPropertyConstraints('mark', [
-         new Choice([self::MARK_DEBIT, self::MARK_CREDIT]),
-      ]);
-      // Must have a valid money.
-      $metadata->addPropertyConstraints('money', [
-         new Valid(),
-         new NotBlank(),
-         new Type('object'),
-      ]);
-   }
-
+    /**
+     * Validation rules.
+     *
+     * @param ClassMetadata $metadata
+     *
+     * @see MT942Validator::getValidator()
+     */
+    public static function loadValidatorMetadata(ClassMetadata $metadata): void
+    {
+        // Can have a mark. From the listed options.
+        $metadata->addPropertyConstraints('mark', [
+            new Choice([self::MARK_DEBIT, self::MARK_CREDIT]),
+        ]);
+        // Must have a valid money.
+        $metadata->addPropertyConstraints('money', [
+            new Valid(),
+            new NotBlank(),
+            new Type('object'),
+        ]);
+    }
 }

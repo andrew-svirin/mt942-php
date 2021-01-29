@@ -1,7 +1,8 @@
 # MT942-PHP
-This tools convert MT942 formatted text to PHP objects. PHP library for parse MT942 format that uses Swift.
-Banks uses MT942 format for payments data transition.
+This tools convert MT942 formatted text to PHP objects. PHP library for parse MT942 format that uses Swift.  
+Banks uses MT942 format for payments data transition.  
 More details about MT942 format you can find in Internet.
+
 Helper for [EBICS Client PHP](https://github.com/andrew-svirin/ebics-client-php)
 
 ### Installation

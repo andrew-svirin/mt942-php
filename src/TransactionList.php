@@ -4,6 +4,7 @@ namespace AndrewSvirin\MT942;
 
 use AndrewSvirin\MT942\models\Transaction;
 use ArrayIterator;
+use IteratorAggregate;
 
 /**
  * Transaction list handler.
@@ -12,38 +13,39 @@ use ArrayIterator;
  * @license http://www.opensource.org/licenses/mit-license.html  MIT License
  * @author Andrew Svirin
  */
-class TransactionList implements \IteratorAggregate
+class TransactionList implements IteratorAggregate
 {
 
-   /**
-    * @var Transaction[]
-    */
-   private $transactions = [];
+    /**
+     * @var Transaction[]
+     */
+    private $transactions = [];
 
-   /**
-    * {@inheritDoc}
-    * @return Transaction[]
-    */
-   public function getIterator(): ArrayIterator
-   {
-      return new ArrayIterator($this->transactions);
-   }
+    /**
+     * {@inheritDoc}
+     * @return Transaction[]|ArrayIterator
+     */
+    public function getIterator(): ArrayIterator
+    {
+        return new ArrayIterator($this->transactions);
+    }
 
-   /**
-    * Get amount of transactions.
-    * @return int
-    */
-   public function count(): int
-   {
-      return count($this->transactions);
-   }
+    /**
+     * Get amount of transactions.
+     * @return int
+     */
+    public function count(): int
+    {
+        return count($this->transactions);
+    }
 
-   /**
-    * Add one transaction to list.
-    * @param Transaction $transaction
-    */
-   public function add(Transaction $transaction)
-   {
-      $this->transactions[] = $transaction;
-   }
+    /**
+     * Add one transaction to list.
+     *
+     * @param Transaction $transaction
+     */
+    public function add(Transaction $transaction): void
+    {
+        $this->transactions[] = $transaction;
+    }
 }

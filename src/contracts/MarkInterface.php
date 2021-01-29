@@ -11,9 +11,9 @@ namespace AndrewSvirin\MT942\contracts;
 interface MarkInterface
 {
 
-   /**
-    * Marks.
-    */
-   const MARK_DEBIT = 'D';
-   const MARK_CREDIT = 'C';
+    /**
+     * Marks.
+     */
+    const MARK_DEBIT = 'D';
+    const MARK_CREDIT = 'C';
 }

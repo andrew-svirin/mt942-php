@@ -15,40 +15,53 @@ use PHPUnit\Framework\TestCase;
 final class MT942Test extends TestCase
 {
 
-   var $dir = __DIR__ . '/../_data';
+    var $dir = __DIR__ . '/../_data';
 
-   public function testTransactionListNormalization()
-   {
-      $str = file_get_contents($this->dir . '/transactions.mt942');
-      $normalizer = new MT942Normalizer();
-      $transactionList = $normalizer->normalize($str);
-      $this->assertNotEmpty($transactionList->count());
-      return $transactionList;
-   }
+    /**
+     * @covers
+     */
+    public function testTransactionListNormalization()
+    {
+        $str = file_get_contents($this->dir . '/transactions.mt942');
+        $normalizer = new MT942Normalizer();
+        $transactionList = $normalizer->normalize($str);
+        $this->assertNotEmpty($transactionList->count());
+    }
 
-   public function testTransactionNormalization()
-   {
-      $str = file_get_contents($this->dir . '/transaction.mt942');
-      $normalizer = new MT942Normalizer();
-      $transaction = $normalizer->normalizeTransaction($str);
-      $this->assertNotEmpty($transaction);
-      return $transaction;
-   }
+    /**
+     * @covers
+     */
+    public function testTransactionNormalization()
+    {
+        $str = file_get_contents($this->dir . '/transaction.mt942');
+        $normalizer = new MT942Normalizer();
+        $transaction = $normalizer->normalizeTransaction($str);
+        $this->assertNotEmpty($transaction);
+    }
 
-   public function testTransactionListValidation()
-   {
-      $transactionList = $this->testTransactionListNormalization();
-      $validator = new MT942Validator();
-      $violationList = $validator->validateList($transactionList);
-      $this->assertEmpty($violationList->count());
-   }
+    /**
+     * @covers
+     */
+    public function testTransactionListValidation()
+    {
+        $str = file_get_contents($this->dir . '/transactions.mt942');
+        $normalizer = new MT942Normalizer();
+        $transactionList = $normalizer->normalize($str);
+        $validator = new MT942Validator();
+        $violationList = $validator->validateList($transactionList);
+        $this->assertEmpty($violationList->count());
+    }
 
-   public function testTransactionValidation()
-   {
-      $transaction = $this->testTransactionNormalization();
-      $validator = new MT942Validator();
-      $violationList = $validator->validate($transaction);
-      $this->assertEmpty($violationList->count());
-   }
-
+    /**
+     * @covers
+     */
+    public function testTransactionValidation()
+    {
+        $str = file_get_contents($this->dir . '/transaction.mt942');
+        $normalizer = new MT942Normalizer();
+        $transaction = $normalizer->normalizeTransaction($str);
+        $validator = new MT942Validator();
+        $violationList = $validator->validate($transaction);
+        $this->assertEmpty($violationList->count());
+    }
 }
