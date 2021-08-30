@@ -186,7 +186,7 @@ final class MT942Normalizer extends MT942Formatter
         $result->setMark(!empty($details[0]['mark']) ? $details[0]['mark'] : null);
         $money = $result->getMoney();
         $money->setCurrency($details[0]['currency']);
-        $money->setAmount($this->getFloatValueForAmount($details[0]['amount']));
+        $money->setAmount($this->normalizeAmount($details[0]['amount']));
         return $result;
     }
 
@@ -227,7 +227,7 @@ final class MT942Normalizer extends MT942Formatter
         }
         $result->setEntryDate(!empty($details[0]['entry_date']) ? $details[0]['entry_date'] : null);
         $result->setMark($details[0]['mark']);
-        $result->setAmount($this->getFloatValueForAmount($details[0]['amount']));
+        $result->setAmount($this->normalizeAmount($details[0]['amount']));
         $result->setTransactionTypeIdCode($details[0]['transaction_type_id_code']);
         $result->setCustomerRef($details[0]['customer_ref']);
         return $result;
@@ -275,7 +275,7 @@ final class MT942Normalizer extends MT942Formatter
         $result->setEntriesNr(!empty($details[0]['entries_nr']) ? $details[0]['entries_nr'] : null);
         $money = $result->getMoney();
         $money->setCurrency($details[0]['currency']);
-        $money->setAmount($this->getFloatValueForAmount($details[0]['amount']));
+        $money->setAmount($this->normalizeAmount($details[0]['amount']));
         return $result;
     }
 
@@ -286,7 +286,7 @@ final class MT942Normalizer extends MT942Formatter
      *
      * @return float
      */
-    private function getFloatValueForAmount(string $amount): float
+    private function normalizeAmount(string $amount): float
     {
         return (float)str_replace(',', '.', $amount);
     }
