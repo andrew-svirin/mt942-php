@@ -31,7 +31,8 @@ final class MT942Normalizer extends MT942Formatter
      */
     public function normalize(string $str): TransactionList
     {
-        if (!($records = explode($this->delimiter, $str))) {
+        $records = explode($this->delimiter, $str);
+        if (false === $records) {
             throw new RuntimeException('Not records found.');
         }
         $result = new TransactionList();
