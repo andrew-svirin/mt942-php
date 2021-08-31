@@ -31,9 +31,12 @@ final class MT942Normalizer extends MT942Formatter
      */
     public function normalize(string $str): TransactionList
     {
+        if (empty($this->delimiter)) {
+            throw new RuntimeException('Separator is empty.');
+        }
         $records = explode($this->delimiter, $str);
-        if (false === $records) {
-            throw new RuntimeException('Not records found.');
+        if (empty($records)) {
+            throw new RuntimeException('No records found.');
         }
         $result = new TransactionList();
         foreach ($records as $record) {
