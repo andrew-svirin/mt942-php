@@ -247,7 +247,7 @@ final class MT942Normalizer extends MT942Formatter
     private function normalizeStatementInformation(string $str): StatementInformation
     {
         preg_match_all(
-            '/(?<id_code>[^?]{3})(\?(?<nr>\d\d)(?<line>[^\?]*))/s',
+            '/(?<id_code>[^?]{3})?(\?(?<nr>\d\d)(?<line>[^\?]*))/s',
             $str,
             $details,
             PREG_SET_ORDER
